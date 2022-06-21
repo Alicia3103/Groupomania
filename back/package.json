@@ -1,0 +1,16 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Alicia",
+  "license": "ISC",
+  "dependencies": {
+    "react-router-dom": "^6.3.0",
+    "sass": "^1.52.3"
+  }
+}
