@@ -13,6 +13,6 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTION')
     next()
 });
-
+const db = require("./database/DB")
 
 module.exports = app;
