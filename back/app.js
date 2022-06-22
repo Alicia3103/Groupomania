@@ -13,6 +13,15 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTION')
     next()
 });
-const db = require("./database/DB")
+//définition des routes
+const userRoutes = require('./routes/user');
+
+
+app.use(express.json());
+app.use('/images', express.static(path.join(__dirname, 'images')))
+
+//utilisation des routes
+
+app.use('/api/auth', userRoutes);
 
 module.exports = app;

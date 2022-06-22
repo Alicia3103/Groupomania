@@ -5,7 +5,10 @@ const app = require('./app');
 const dotenv = require("dotenv");
 dotenv.config();
 
-//appel des variables d'environnement
+//appel de la Base de Données Mysql
+const db = require("./database/DB")
+
+//appel de la variable d'environnement correspondant au port
 const MY_PORT = process.env.PORT;
 
 
