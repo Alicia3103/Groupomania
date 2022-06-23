@@ -70,7 +70,7 @@ exports.login = (req, res, next) => {
   exports.unactiveAccount = (req, res) => { //désactive son propre compte
     const id = req.auth.userId; // arriver a recuperer le userId
     
-    db.query('UPDATE user SET Actif=1 WHERE id =?', [id],
+    db.query('UPDATE user SET Actif=1 WHERE Id =?', [id],
     function(err, result) {
         if(err || result.affectedRows===0) {
             return res.status(400).json({ err : "Utilisateur non trouvé" });
