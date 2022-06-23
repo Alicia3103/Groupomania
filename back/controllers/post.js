@@ -26,19 +26,20 @@ exports.deletePost=(req,res,next)=>{
     if(err || !result.length) {
       return res.status(404).json({ message: 'Post non trouvé'});
       }
-  if(req.auth.userId ===result[0].UserId){
-      const imageUrl = result[0].ImageUrl
-      if (imageUrl) {
-        const filename = imageUrl.split('/images/')[1];
-        fs.unlinkSync(`images/${filename}`)
-      }
-      db.query('DELETE * FROM post WHERE Id=',[id],function(err,result){
-        if(err || !result.length) {
-          return res.status(404).json({ message: 'Post non supprimé'});
+    if(req.auth.userId ===result[0].UserId){
+        const imageUrl = result[0].ImageUrl
+        if (imageUrl) {
+          const filename = imageUrl.split('/images/')[1];
+          fs.unlinkSync(`images/${filename}`)
         }
-        return res.status(200).json({ message: 'Post supprimé'})
-      })
-   } 
+        db.query('DELETE * FROM post WHERE Id=',[id],function(err,result){
+          if(err || !result.length) {
+            return res.status(404).json({ message: 'Post non supprimé'});
+          }
+          return res.status(200).json({ message: 'Post supprimé'})
+        })
+    } 
+    return res.status(401).json({ message: 'Vous ne pouvez pas supprimer ce post'});
   })
 }
 // -------------------------------------------------------
@@ -53,7 +54,7 @@ exports.modifyPost=(req,res,next)=>{
     if(err || !result.length) {
       return res.status(404).json({ message: 'Post non trouvé'});
       }
-  if(req.auth.userId ===result[0].UserId){
+    if(req.auth.userId ===result[0].UserId){
       const newImageUrl = result[0].ImageUrl//req.protocol+"://"+req.headers.host +"/images/"+req.file.filename if req.file exist
       const newTitle= "new title"//JSON.parse(req.body.title)
       const newContent = result[0].Content//JSON.parse(req.body.content)
@@ -61,19 +62,19 @@ exports.modifyPost=(req,res,next)=>{
       console.log(imageUrl)
 
 
-      if (imageUrl!=="" && newImage) {
-        const filename = imageUrl.split('/images/')[1];
-        fs.unlinkSync(`images/${filename}`)
+        if (imageUrl!=="" && newImage) {
+          const filename = imageUrl.split('/images/')[1];
+          fs.unlinkSync(`images/${filename}`)
 
-      }
-
-      db.query('UPDATE post SET Title=?, Content=?, ImageUrl=? WHERE Id =?', [newTitle,newContent,newImageUrl,id],function(err,result){
-        if(err || !result.length) {
-          return res.status(404).json({ message: 'Post non supprimé'});
         }
-        return res.status(200).json({ message: 'Post supprimé'})
-      })
-   } 
+
+        db.query('UPDATE post SET Title=?, Content=?, ImageUrl=? WHERE Id =?', [newTitle,newContent,newImageUrl,id],function(err,result){
+          if(err || !result.length) {
+            return res.status(404).json({ message: 'Post non supprimé'});
+          }
+          return res.status(200).json({ message: 'Post modifié'})
+        })
+    } 
   })
 }
 
@@ -89,3 +90,35 @@ exports.getAllPost = (req, res, next) => {
         return res.status(200).json({ result})
       })
     };
+
+    //fonction like
+
+    exports.like=(req,res,next)=>{
+      const postId= 2
+      const userId = 1
+      db.query('SELECT * FROM post WHERE Id=?',[postId],function(err,result){
+        if(err || !result.length) {
+          return res.status(404).json({ message: 'Post non trouvé'});
+          }
+          const recupUserLike = JSON.parse(result[0].LikeUser)
+          let userLike = []
+          if (recupUserLike.length) {
+            userLike=recupUserLike
+          }
+          if ( recupUserLike.includes(userId)){
+            return res.status(400).json({ error:"vous avez deja liké ce post"})
+          }
+          const newLike=result[0].Likes++
+          userLike.push(userId)
+          const newUserLike=JSON.stringify(userLike)
+
+          db.query('UPDATE post SET Likes=?, LikeUser=?   where Id=?', [ newLike, newUserLike, postId ],function(err,result){
+            if(err){
+              console.log(err)
+              return res.status(400).json({ error:"impossible de liker le post"})
+            }
+            return res.status(200).json({message: "Post liké"})
+           
+          })
+      })
+    }
