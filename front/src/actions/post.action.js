@@ -8,7 +8,7 @@ export const getPosts = () => {
     return axios
       .get(`http://localhost:3080/api/post/`)
       .then((res) => {
-        dispatch({ type: GET_POSTS, payload: res.data });
+        dispatch({ type: GET_POSTS, payload: res.data.result });
       })
       .catch((err) => console.log(err));
   };

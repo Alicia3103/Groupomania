@@ -20,14 +20,13 @@ bcrypt.genSalt(parseInt(process.env.SALT))
 .then(salt=>{
   bcrypt.hash(req.body.password,salt)
 
-    .then(hash => { 
-        //ajouter les autres données de user (date is admin etc)
+    .then(hash => {         //ajouter les autres données de user (date is admin etc)
         db.query('INSERT INTO user SET  Nom =?, Prenom =?, Email =?, Password= ?, IsAdmin =?',[nom,prenom,email,hash,isAdmin],function (err, result){
             if (err) {
                 console.log(err)
                 return res.status (400).json ({error:'creation de compte impossible'})
                 }
-               return res.status(201).json( { message: 'utilisateur crée'})
+            res.status(201).json({ message: "Utilisateur créé"})
 
         })
     })

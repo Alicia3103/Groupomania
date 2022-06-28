@@ -8,7 +8,7 @@ const userCtrl = require('../controllers/user');
 const auth = require('../middlewares/auth');
 
 //routes avec tous les middleware nécessaires
-router.post('/signup',emailValid,passwordValid, userCtrl.signup);
+router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
 router.put('/unactiveAccount',auth, userCtrl.unactiveAccount);
 

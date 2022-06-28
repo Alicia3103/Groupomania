@@ -1,34 +1,32 @@
+import axios from 'axios';
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+
 const SignUpForm = () => {
+
+    const { register, handleSubmit } = useForm();
+    const onSubmit = (data) => {
+           
+        axios.post("http://localhost:3080/api/auth/signup",data )
+        .then((result) => {
+            console.log(result.data.message)
+            //ajouter les infos d'authentification dans le back fonction signup pour log k'utilisteur apres creation compte
+        })
+        .catch((error) => console.log(error))
+    }
+
     return (
-        <div className='LoginForm'>
-            <form  onSubmit="" action="" method="post">
-                 <h1>Inscription</h1>
-                 <div className="loginInfo">
-                     <label htmlFor="">Nom</label>
-                     <input type="text"  />
-                 </div>
-                 <div className="loginInfo">
-                     <label htmlFor="">Prénom</label>
-                     <input type="text"  />
-                 </div>
-                 <div className="loginInfo">
-                     <label htmlFor="">email</label>
-                     <input type="email"  />
-                 </div>
-                 <div className="loginInfo">
-                     <label htmlFor="">mot de passe</label>
-                     <input type="password"  />
-                 </div>
-                 <button>connexion</button>
-                
+        <div className="signup-container">
+            <div className="signup">
+                <h3>S'inscrire</h3>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <input type="text" placeholder='Nom' required {...register('nom')} />
+                    <input type="text" placeholder='Prénom'required {...register('prenom')} />
+                    <input type="email" placeholder='Email'required {...register('email')}/>
+                    <input type="password" placeholder='Mot de passe'required {...register('password')} />
+                    <input type="submit" value="Valider l'inscription" />
                 </form>
-                  
-                <Link to={"/connexion"}>
-                     Déjà inscrit?<button>Connectez-vous!</button>
-                     </Link>
-                 
+            </div>
         </div>
     );
 };

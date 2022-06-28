@@ -1,9 +1,10 @@
 import React from "react";
 import {BrowserRouter, Routes,Route} from "react-router-dom"
+import Connexion from "./pages/Connexion";
 
-import LogIn from "./pages/LogIn";
+
 import Home from "./pages/Home";
-import SignUp from "./pages/SignUp";
+
 import User from "./pages/User";
 
 const App = () => {
@@ -11,11 +12,10 @@ const App = () => {
 		<BrowserRouter>
 		<Routes>
 			<Route path="/accueil" element={<Home/>} />
-			<Route path="/connexion" element={<LogIn/>} />
-			<Route path="/inscription" element={<SignUp />} />
+			<Route path="/connexion" element={<Connexion/>} />
 			<Route path="/user" element={<User/>} />
 			{/*pour tout url qui ne correspond pas a ce declaré au dessus*/}
-			<Route path="*" element={<LogIn/>} />
+			<Route path="*" element={<Connexion/>} />
 		</Routes>
 		</BrowserRouter>
 	)
