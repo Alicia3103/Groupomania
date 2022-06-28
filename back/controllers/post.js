@@ -2,9 +2,9 @@ const db = require("../database/DB")
 
 //fonction création du post
 exports.createPost=(req,res,next)=>{
-const userId=2
-const title= "titre"//JSON.parse(req.body.title)
-const content="bla" //JSON.parse(req.body.content)
+const userId=req.auth.userId
+const title= req.body.title
+const content=req.body.content
 const imageUrl= "ici" //req.protocol+"://"+req.headers.host +"/images/"+req.file.filename if req.file exist
 
 db.query('INSERT INTO post SET UserId=?, Title=?,Content =?, ImageUrl =?',[userId,title,content,imageUrl] ,function(err,result){
@@ -20,7 +20,7 @@ db.query('INSERT INTO post SET UserId=?, Title=?,Content =?, ImageUrl =?',[userI
 
 //fonction supression du post
 exports.deletePost=(req,res,next)=>{
-  const id = 2
+  const id = req.body.id
   
   db.query('SELECT * FROM post WHERE Id=',[id],function(err,result){
     if(err || !result.length) {
@@ -48,7 +48,7 @@ exports.deletePost=(req,res,next)=>{
 
 //fonction modification de post
 exports.modifyPost=(req,res,next)=>{
-  const id = 2
+  const id = req.body.id
   
   db.query('SELECT * FROM post WHERE Id=',[id],function(err,result){
     if(err || !result.length) {
@@ -81,7 +81,7 @@ exports.modifyPost=(req,res,next)=>{
 
 // fonction affichage de tous les posts
 exports.getAllPost = (req, res, next) => {
-    db.query('SELECT * FROM post ORDER BY Create_time DESC', function(err,result){
+    db.query('SELECT * FROM post ORDER BY CreateTime DESC', function(err,result){
         if(err){
           console.log(err)
           return res.status(404).json({ error:"aucun posts trouvés"})
@@ -93,7 +93,7 @@ exports.getAllPost = (req, res, next) => {
 
     //fonction like
 
-    exports.like=(req,res,next)=>{
+    exports.likePost=(req,res,next)=>{
       const postId= 2
       const userId = 1
       db.query('SELECT * FROM post WHERE Id=?',[postId],function(err,result){
@@ -117,8 +117,20 @@ exports.getAllPost = (req, res, next) => {
               console.log(err)
               return res.status(400).json({ error:"impossible de liker le post"})
             }
-            return res.status(200).json({message: "Post liké"})
+            return res.status(200).json({message: "Post liké"}) 
            
           })
       })
     }
+    // fonction affichage de tous les posts
+exports.getAllUserPost = (req, res, next) => {
+const userId= 2//req.auth.userId
+  db.query('SELECT * FROM post WHERE UserId =? ORDER BY CreateTime DESC',[userId], function(err,result){
+      if(err){
+        console.log(err)
+        return res.status(404).json({ error:"aucun posts trouvés"})
+      }
+      
+      return res.status(200).json({ result})
+    })
+  };
