@@ -11,8 +11,8 @@ const jwt = require('jsonwebtoken')
 //enregistrer un utilisateur 
 exports.signup = (req, res, next) => {
     const email = req.body.email
-    const nom = "test"
-    const prenom = "test"
+    const nom = req.body.nom
+    const prenom = req.body.prenom
     const isAdmin=req.body.isAdmin
    
     //hash et sallage du MDP grace a Bcrypt
@@ -50,7 +50,7 @@ exports.login = (req, res, next) => {
             return res.status(404).json({ message: 'Utilisateur non trouvé'});
         }
         const user = result[0];
-        console.log(user)
+
             bcrypt.compare(password, user.Password) 
             .then(valid => {
                 if (!valid) {

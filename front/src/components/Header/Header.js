@@ -1,7 +1,7 @@
 import React from 'react'
 import GroupomaniaLogo from '../images/icon-left-font.svg'
 
-const Logo = () => {
+const Header = () => {
     return (
         <div className="Header">
         <img src ={GroupomaniaLogo} alt="Logo groupomania" height={150}/>
@@ -9,4 +9,4 @@ const Logo = () => {
     );
 };
 
-export default Logo;
+export default Header;
