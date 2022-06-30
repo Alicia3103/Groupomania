@@ -7,6 +7,8 @@ import colors from '../../utils/styles/colors';
 const SignUpContainer=styled.div`
 Background-color:${colors.secondary};
 border-radius: 0 10px 10px 10px ;
+height:400px;
+box-shadow: 10px 15px 16px 6px rgba(0,0,0,0.51);
 padding:40px 25px 40px 25px;
 `
 const SignUpFormContainer=styled.form`
@@ -15,9 +17,20 @@ flex-direction:column;
 justify-content: space-between;
 align-items: center;
 height:100%;
-
 `
-
+const Input=styled.input`
+margin:10px;
+padding:5px;
+border-radius:15px;
+border-color:${colors.secondary};
+`
+const InputButton=styled.input`
+margin:10px;
+padding:5px;
+background-color:#ff9191;
+border-radius:15px;
+border-color:#ff9191;
+`
 const SignUpForm = () => {
 
     const { register, handleSubmit } = useForm();
@@ -42,11 +55,11 @@ const SignUpForm = () => {
         <SignUpContainer>
 
                 <SignUpFormContainer onSubmit={handleSubmit(onSubmit)}>
-                    <input type="text" placeholder='Nom' required {...register('nom')} />
-                    <input type="text" placeholder='Prénom'required {...register('prenom')} />
-                    <input type="email" placeholder='Email'required {...register('email')}/>
-                    <input type="password" placeholder='Mot de passe'required {...register('password')} />
-                    <input type="submit" value="Valider l'inscription" />
+                    <Input type="text" placeholder='Nom' required {...register('nom')} />
+                    <Input type="text" placeholder='Prénom'required {...register('prenom')} />
+                    <Input type="email" placeholder='Email'required {...register('email')}/>
+                    <Input type="password" placeholder='Mot de passe'required {...register('password')} />
+                    <InputButton type="submit" value="Valider l'inscription" />
                 </SignUpFormContainer>
            
         </SignUpContainer>

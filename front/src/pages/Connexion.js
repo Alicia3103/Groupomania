@@ -4,6 +4,7 @@ import Header from '../components/Header/Header';
 import SignUpForm from '../components/SignUpForm/SignUpForm';
 import styled from 'styled-components'
 import colors from '../utils/styles/colors';
+import backgroundImage from './groupomaniafond.jpg'
 
 const ConnexionPage=styled.section `
 display:flex;
@@ -16,12 +17,17 @@ display:flex;
 align-items: center;
 justify-content: center;
 flex-grow:3;
-width:100%;
+width:100vw;
+background-image: url(${backgroundImage});
+background-position: center; 
+background-repeat: no-repeat; 
+background-size: cover;
 `
 const Connect = styled.div `
 font-size:22px;
 display:flex;
-max-width:400px;
+width:400px;
+
 flex-direction:column;
 `
 const HeaderButton = styled.div`
@@ -32,9 +38,10 @@ height:35px;
 `
 const Button= styled.button `
 border: none ;
+font-size:16px;
+font-weight:bold;
 height:100%;
 border-radius:10px 10px 0 0 ;
-
 `
 
 const Connexion = () => {
@@ -45,11 +52,11 @@ const Connexion = () => {
         <ConnectContainer>
            <Connect>
             <HeaderButton>
-                <Button style={{background:signUp? colors.secondary:colors.primary}}
+                <Button style={{background:signUp? colors.secondary:colors.darkerSecondary , color: signUp? colors.primary:"black"}}
                 onClick={()=>setSignUp(true)}>
                     S'inscrire
                 </Button>
-                <Button style={{background:signUp? colors.primary:colors.secondary}}
+                <Button style={{background:signUp? colors.darkerSecondary:colors.secondary , color: signUp? "black":colors.primary}}
                 onClick={()=>setSignUp(false)}>
                     Se connecter
                 </Button>

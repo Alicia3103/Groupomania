@@ -7,6 +7,30 @@ import colors from '../../utils/styles/colors';
 
 const LogInContainer=styled.div`
 Background-color:${colors.secondary};
+height:400px;
+box-shadow: 10px 15px 16px 6px rgba(0,0,0,0.51);
+border-radius: 0 10px 10px 10px ;
+padding:40px 25px 40px 25px;
+`
+const LogInFormContainer=styled.form`
+display:flex;
+flex-direction:column;
+justify-content: space-between;
+align-items: center;
+height:100%;
+`
+const Input=styled.input`
+margin:10px;
+padding:5px;
+border-radius:15px;
+border-color:${colors.secondary};
+`
+const InputButton=styled.input`
+margin:10px;
+padding:5px;
+background-color:${colors.primary};
+border-radius:15px;
+border-color:${colors.primary}
 `
 
 const LoginForm = () => {
@@ -24,12 +48,11 @@ const LoginForm = () => {
 
     return (
         <LogInContainer>
-            <h1>Connexion</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                 <input type="email" placeholder='Email'required {...register('email')}/>
-                    <input type="password" placeholder='Mot de passe'required {...register('password')} />
-                    <input type="submit" value="Se connecter" />
-                </form>        
+            <LogInFormContainer onSubmit={handleSubmit(onSubmit)}>
+                 <Input type="email" placeholder='Email'required {...register('email')}/>
+                    <Input type="password" placeholder='Mot de passe'required {...register('password')} />
+                    <InputButton type="submit" value="Se connecter" />
+                </LogInFormContainer>        
         </LogInContainer>
     );
 };
