@@ -13,7 +13,6 @@ exports.signup = (req, res, next) => {
     const email = req.body.email
     const nom = req.body.nom
     const prenom = req.body.prenom
-    const isAdmin=req.body.isAdmin
    
     //hash et sallage du MDP grace a Bcrypt
 bcrypt.genSalt(parseInt(process.env.SALT))
@@ -21,7 +20,7 @@ bcrypt.genSalt(parseInt(process.env.SALT))
   bcrypt.hash(req.body.password,salt)
 
     .then(hash => {         //ajouter les autres données de user (date is admin etc)
-        db.query('INSERT INTO user SET  Nom =?, Prenom =?, Email =?, Password= ?, IsAdmin =?',[nom,prenom,email,hash,isAdmin],function (err, result){
+        db.query('INSERT INTO user SET  Nom =?, Prenom =?, Email =?, Password= ?',[nom,prenom,email,hash],function (err, result){
             if (err) {
                 console.log(err)
                 return res.status (400).json ({error:'creation de compte impossible'})

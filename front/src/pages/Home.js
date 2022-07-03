@@ -24,8 +24,6 @@ display:flex;
 align-items: center;
 justify-content: flex-start;
 width:100vw;
-
-
 `
 const PostsContainer= styled.div`
 display:flex;

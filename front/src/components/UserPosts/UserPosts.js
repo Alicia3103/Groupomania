@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios"
+import styled from 'styled-components';
+import colors from '../../utils/styles/colors';
+
+const UserPostsContainer=styled.div`
+display:flex;
+flex-direction: column;
+justify-content: space-around;
+align-items: center;
+height:200px;
+width:100%;
+background-color:${colors.secondary};
+border-radius:10px;
+`
 
 const UserPosts=()=>{
     const [data,setData]= useState([]);
@@ -10,12 +23,11 @@ const UserPosts=()=>{
     },[])
 
     return (
-        <div className='userPostContainer'>
+        <UserPostsContainer>
             <div className="userPosts">
-        {console.log(data.result)}
+        {       console.log(data.result)}
             </div>
-            
-        </div>
+        </UserPostsContainer>
     );
 };
 

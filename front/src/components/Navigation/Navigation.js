@@ -39,7 +39,7 @@ const Navigation = () => {
     return (
         <NavComponent>
             <NavList>
-                <NavLink to="/accueil">
+                <NavLink to="/">
                 <NavIcon><FontAwesomeIcon icon={faHouse}></FontAwesomeIcon></NavIcon>
                 </NavLink>
                 <NavLink to="/user">

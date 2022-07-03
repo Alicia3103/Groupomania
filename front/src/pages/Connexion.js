@@ -5,6 +5,7 @@ import SignUpForm from '../components/SignUpForm/SignUpForm';
 import styled from 'styled-components'
 import colors from '../utils/styles/colors';
 import backgroundImage from './groupomaniafond.jpg'
+import { useSelector } from 'react-redux';
 
 const ConnexionPage=styled.section `
 display:flex;
@@ -46,6 +47,8 @@ border-radius:10px 10px 0 0 ;
 
 const Connexion = () => {
     const[signUp,setSignUp]=useState(true)
+    const user= useSelector((state)=>state.userReducer)
+console.log(user)
     return (
         <ConnexionPage>
         <Header/>

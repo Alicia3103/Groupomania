@@ -1,9 +1,15 @@
-import axios from 'axios';
+
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import axios from '../../api/axios';
+import { Link,useNavigate,useLocation  } from 'react-router-dom';
+
+import { useRef,useState,useEffect} from 'react';
+import useAuth from '../../hooks/useAuth';
 
 import styled from 'styled-components';
+
 import colors from '../../utils/styles/colors';
+
 
 const LogInContainer=styled.div`
 Background-color:${colors.secondary};
@@ -32,25 +38,87 @@ background-color:${colors.primary};
 border-radius:15px;
 border-color:${colors.primary}
 `
+const LOGIN_URL='/api/auth/login'
 
 const LoginForm = () => {
-    const { register, handleSubmit } = useForm();
-    const onSubmit = (data) => {
-           
-        axios.post("http://localhost:3080/api/auth/login",data )
-        .then((result) => {
-            const authToken ="Bearer "+result.data.token
-            console.log(authToken)
-            axios.defaults.headers.common['Authorization'] =authToken
-        })
-        .catch((error) => console.log(error))
+    const{setAuth}= useAuth()
+
+    const navigate=useNavigate()
+    const location= useLocation()
+    const from =location.state?.from?.pathname||"/"
+
+    const userRef=useRef()
+    const errRef=useRef()
+    const[email,setEmail]=useState('')
+    const[password,setPassword]=useState('')
+    const[errMsg,setErrMsg]=useState('')
+    
+
+    useEffect(()=>{
+        userRef.current.focus();
+    },[])
+    useEffect(()=>{
+        setErrMsg('');
+    },[email,password])
+
+    const handleSubmit=async(e)=>{
+        e.preventDefault()
+
+    try{
+        const response=await axios.post(LOGIN_URL,
+            JSON.stringify({email:email,password}),
+            {
+                headers:{'Content-Type':'application/json'}, 
+            }
+        )
+        const accessToken = response?.data?.token
+        const userId=response?.data?.userId
+        setAuth({userId,email,accessToken})
+
+        setEmail('')
+        setPassword('')
+      
+        navigate(from,{replace:true})
+    }catch(err){
+        if(!err?.response){
+            setErrMsg('No Server Response')
+        }else if(err.response?.status ===400){
+            setErrMsg('Missing email or password') 
+        }else if(err.response?.status ===401){
+            setErrMsg('UnAuthorized') 
+        }else{
+            setErrMsg('Login Failed')
+        }
+        errRef.current.focus()
+
+    }  
     }
 
+
+
     return (
+        
         <LogInContainer>
-            <LogInFormContainer onSubmit={handleSubmit(onSubmit)}>
-                 <Input type="email" placeholder='Email'required {...register('email')}/>
-                    <Input type="password" placeholder='Mot de passe'required {...register('password')} />
+            <p ref={errRef}className={errMsg?"errmsg":"offscreen"}>{errMsg}</p>
+            <LogInFormContainer onSubmit={handleSubmit}>
+                <label for="email">Email</label>
+                 <Input 
+                 type="email" 
+                 id="email"
+                 ref={userRef}
+                 required 
+                 onChange={(e)=>setEmail(e.target.value)}
+                 value={email}
+                 />
+                 <label for="password">Password</label>
+                 <Input 
+                 type="password" 
+                 id="password"
+                 required 
+                 onChange={(e)=>setPassword(e.target.value)}
+                 value={password}
+                 />
+
                     <InputButton type="submit" value="Se connecter" />
                 </LogInFormContainer>        
         </LogInContainer>

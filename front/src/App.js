@@ -6,6 +6,8 @@ import { createGlobalStyle } from 'styled-components'
 import Home from "./pages/Home";
 
 import User from "./pages/User";
+import RequireAuth from "./components/RequireAuth/RequireAuth";
+import Layout from "./components/Layout";
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -22,11 +24,14 @@ const App = () => {
 		<BrowserRouter>
 		<GlobalStyle/>
 		<Routes>
-			<Route path="/accueil" element={<Home/>} />
-			<Route path="/connexion" element={<Connexion/>} />
-			<Route path="/user" element={<User/>} />
-			{/*pour tout url qui ne correspond pas a ce declaré au dessus*/}
-			<Route path="*" element={<Connexion/>} />
+			<Route path="/" element={<Layout/>}>
+				<Route path="/connexion" element={<Connexion/>} />
+				<Route element={<RequireAuth/>}>
+					<Route path="/" element={<Home/>} />
+					<Route path="/user" element={<User/>} />
+				</Route>
+				<Route path="*" element={<Connexion/>} />
+			</Route>
 		</Routes>
 		</BrowserRouter>
 	)

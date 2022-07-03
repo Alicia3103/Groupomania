@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import {useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import colors from '../../utils/styles/colors';
 
@@ -32,7 +33,7 @@ border-radius:15px;
 border-color:#ff9191;
 `
 const SignUpForm = () => {
-
+    const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
     const onSubmit = (data) => {
            
@@ -43,9 +44,11 @@ const SignUpForm = () => {
             //ajouter les infos d'authentification dans le back fonction signup pour log k'utilisteur apres creation compte  
             axios.post("http://localhost:3080/api/auth/login",data )
                 .then((result) => {
-                        const authToken ="Bearer "+result.data.token
+                    const authToken ="Bearer "+result.data.token
+                    const userId=result.data.userId
                         console.log(authToken)
                         axios.defaults.headers.common['Authorization'] =authToken  
+                        navigate("/accueil")
                     })
         })
         .catch((error) => console.log(error))

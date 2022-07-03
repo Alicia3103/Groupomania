@@ -9,6 +9,8 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import rootReducer from './reducers/index'
 import { getPosts } from './actions/post.action';
+import { AuthProvider } from './context/AuthProvider';
+
 
 
 
@@ -21,6 +23,8 @@ store.dispatch(getPosts())
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
+    <AuthProvider>
     <App />
+    </AuthProvider>
     </Provider>
 );

@@ -5,23 +5,32 @@ import UserInfo from '../components/UserInfo/UserInfo'
 import UserPosts from '../components/UserPosts/UserPosts'
 import styled from 'styled-components';
 import backgroundImage from './groupomaniafond.jpg'
+import colors from '../utils/styles/colors';
 
 
 const UserPage=styled.div`
-`
-const UserPageContainer= styled.section`
 display:flex;
-align-items: center;
-justify-content: center;
-flex-grow:3;
+flex-direction:column;
 height:100vh;
-width:100vw;
 background-image: url(${backgroundImage});
 background-position: center; 
 background-repeat: no-repeat; 
 background-size: cover;
 `
-const UserContainer=styled.div``
+const UserPageContainer= styled.section`
+display:flex;
+align-items: center;
+justify-content: flex-start;
+width:100vw;
+`
+const UserContainer=styled.div`
+display:flex;
+width: 50%;
+flex-direction: column;
+justify-content: space-around;
+align-items: center;
+`
+
 const User = () => {
     return (
         <UserPage>
@@ -29,8 +38,8 @@ const User = () => {
             <UserPageContainer>
                 <Navigation/>
                 <UserContainer>
-                    <UserInfo />
-                    <UserPosts/>
+                        <UserInfo />          
+                        <UserPosts/>
                 </UserContainer>
             </UserPageContainer>
         </UserPage>
