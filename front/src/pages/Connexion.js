@@ -55,16 +55,17 @@ console.log(user)
         <ConnectContainer>
            <Connect>
             <HeaderButton>
-                <Button style={{background:signUp? colors.secondary:colors.darkerSecondary , color: signUp? colors.primary:"black"}}
+               
+                <Button style={{background:signUp?  colors.secondary:colors.darkerSecondary  , color: signUp? colors.primary:"black"}}
                 onClick={()=>setSignUp(true)}>
-                    S'inscrire
-                </Button>
-                <Button style={{background:signUp? colors.darkerSecondary:colors.secondary , color: signUp? "black":colors.primary}}
-                onClick={()=>setSignUp(false)}>
                     Se connecter
                 </Button>
+                <Button style={{background:signUp?colors.darkerSecondary:colors.secondary, color: signUp? "black":colors.primary}}
+                onClick={()=>setSignUp(false)}>
+                    S'inscrire
+                </Button>
             </HeaderButton>
-            {signUp ? <SignUpForm/>:<LoginForm/>}
+            {signUp ? <LoginForm/>:<SignUpForm/>}
            </Connect>
            </ConnectContainer>
         </ConnexionPage>

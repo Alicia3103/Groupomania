@@ -1,7 +1,7 @@
 
 import React from 'react';
 import axios from '../../api/axios';
-import { Link,useNavigate,useLocation  } from 'react-router-dom';
+import { useNavigate,useLocation  } from 'react-router-dom';
 
 import { useRef,useState,useEffect} from 'react';
 import useAuth from '../../hooks/useAuth';
@@ -66,9 +66,10 @@ const LoginForm = () => {
 
     try{
         const response=await axios.post(LOGIN_URL,
-            JSON.stringify({email:email,password}),
+            JSON.stringify({email,password}),
             {
                 headers:{'Content-Type':'application/json'}, 
+                withCredentials: true
             }
         )
         const accessToken = response?.data?.token

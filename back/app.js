@@ -10,7 +10,9 @@ const app = express();
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 
-app.use(cors());
+//ne pas tout autoriser dans les cors, block avec le withcredential
+
+app.use(cors({credentials: true, origin: 'http://localhost:3000',optionsSuccessStatus:200}))
 
 
 
