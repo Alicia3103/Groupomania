@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import colors from '../../utils/styles/colors';
 
 
+
 const LogInContainer=styled.div`
 Background-color:${colors.secondary};
 height:400px;
@@ -74,8 +75,8 @@ const LoginForm = () => {
         )
         const accessToken = response?.data?.token
         const userId=response?.data?.userId
+        console.log(accessToken)
         setAuth({userId,email,accessToken})
-
         setEmail('')
         setPassword('')
       
@@ -102,7 +103,7 @@ const LoginForm = () => {
         <LogInContainer>
             <p ref={errRef}className={errMsg?"errmsg":"offscreen"}>{errMsg}</p>
             <LogInFormContainer onSubmit={handleSubmit}>
-                <label for="email">Email</label>
+                <label htmlFor="email">Email</label>
                  <Input 
                  type="email" 
                  id="email"
@@ -111,7 +112,7 @@ const LoginForm = () => {
                  onChange={(e)=>setEmail(e.target.value)}
                  value={email}
                  />
-                 <label for="password">Password</label>
+                 <label htmlFor="password">Password</label>
                  <Input 
                  type="password" 
                  id="password"

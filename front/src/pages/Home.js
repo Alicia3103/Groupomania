@@ -1,13 +1,15 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+
 import Header from '../components/Header/Header';
 import Navigation from '../components/Navigation/Navigation';
-import Post from '../components/Post';
-import { isEmpty } from '../utils/Utils';
+
 import styled from 'styled-components'
 import backgroundImage from './groupomaniafond.jpg'
 import PostForm from '../components/PostForm/PostForm';
 import colors from '../utils/styles/colors';
+import axios from '../api/axios';
+import Post from '../components/Post';
+
 
 const HomePage=styled.div`
 display:flex;
@@ -53,8 +55,33 @@ border-radius:10px;
 `
 
 const Home = () => {
-const posts= useSelector((state)=>state.postReducer)
-console.log(posts)
+    const [posts, setPosts] = useState();
+  
+
+    useEffect(() => {
+        let isMounted = true;
+        const controller = new AbortController();
+
+        const getPosts = async () => {
+            try {
+                const response = await axios.get('/api/post', {
+                    signal: controller.signal
+                });
+                console.log(response.data.result);
+                isMounted && setPosts(response.data.result);
+            } catch (err) {
+                console.error(err);
+                
+            }
+        }
+
+        getPosts();
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        }
+    }, [])
 
 
     return (
@@ -67,7 +94,13 @@ console.log(posts)
                         <PostForm/>
                     </NewPostContainer>
                     <OldPostsContainer>
-                        {!isEmpty(posts)&& posts.map((post,index)=> <Post post={post} key={index}/>)}
+                    {posts?.length
+                ? (
+                    <div>
+                        {posts.map((post,index)=> <Post post={post} key={index}/>)}
+                    </div>
+                ) : <p>No posts to display</p>
+            }
                     </OldPostsContainer>
                 </PostsContainer>
             </HomePageContainer>

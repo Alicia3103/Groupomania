@@ -5,7 +5,7 @@ import UserInfo from '../components/UserInfo/UserInfo'
 import UserPosts from '../components/UserPosts/UserPosts'
 import styled from 'styled-components';
 import backgroundImage from './groupomaniafond.jpg'
-import colors from '../utils/styles/colors';
+
 
 
 const UserPage=styled.div`
