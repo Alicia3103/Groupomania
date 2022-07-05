@@ -11,6 +11,7 @@ const Post = ({ post }) => {
       <img
         src="https://picsum.photos/1500/400"
         className="post-img"
+        id={post.Id}
         height={75}
         alt="img-post"
       />

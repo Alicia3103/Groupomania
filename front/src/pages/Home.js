@@ -7,8 +7,10 @@ import styled from 'styled-components'
 import backgroundImage from './groupomaniafond.jpg'
 import PostForm from '../components/PostForm/PostForm';
 import colors from '../utils/styles/colors';
-import axios from '../api/axios';
+
 import Post from '../components/Post';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const HomePage=styled.div`
@@ -56,21 +58,25 @@ border-radius:10px;
 
 const Home = () => {
     const [posts, setPosts] = useState();
-  
+    const axiosPrivate = useAxiosPrivate()
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         let isMounted = true;
         const controller = new AbortController();
 
         const getPosts = async () => {
+
             try {
-                const response = await axios.get('/api/post', {
+                const response = await axiosPrivate.get('/api/post', {
                     signal: controller.signal
                 });
                 console.log(response.data.result);
                 isMounted && setPosts(response.data.result);
             } catch (err) {
                 console.error(err);
+                navigate('/login', { state: { from: location }, replace: true });
                 
             }
         }
@@ -81,6 +87,7 @@ const Home = () => {
             isMounted = false;
             controller.abort();
         }
+        // eslint-disable-next-line
     }, [])
 
 
@@ -97,7 +104,7 @@ const Home = () => {
                     {posts?.length
                 ? (
                     <div>
-                        {posts.map((post,index)=> <Post post={post} key={index}/>)}
+                        {posts.map((post,index)=> <Post post={post} key={index}id={post.Id}/>)}
                     </div>
                 ) : <p>No posts to display</p>
             }
