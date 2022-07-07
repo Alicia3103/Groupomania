@@ -72,7 +72,7 @@ const Home = () => {
                 const response = await axiosPrivate.get('/api/post', {
                     signal: controller.signal
                 });
-                console.log(response.data.result);
+              
                 isMounted && setPosts(response.data.result);
             } catch (err) {
                 console.error(err);

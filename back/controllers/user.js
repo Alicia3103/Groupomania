@@ -77,7 +77,7 @@ exports.login = (req, res, next) => {
                  return res.status(200).json({
                     userId: user.Id,
                     //encodage avec la fonction 'sign'
-                    token: jwt.sign({userId: user.Id}, secretToken,{expiresIn: '24h'})
+                    token: jwt.sign({userId: user.Id}, secretToken,{expiresIn: '24H'})
                 })
           })
           .catch(error => res.status(500).json({error}));

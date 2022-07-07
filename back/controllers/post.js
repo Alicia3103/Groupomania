@@ -86,7 +86,7 @@ exports.getAllPost = (req, res, next) => {
           console.log(err)
           return res.status(404).json({ error:"aucun posts trouvés"})
         }
-        console.log(result)
+        
         return res.status(200).json({ result})
       })
     };

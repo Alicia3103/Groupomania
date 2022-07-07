@@ -6,11 +6,11 @@ dotenv.config();
 
 const db = mysql.createConnection({
 
-  host     : "localhost",
-  user     : "root",
+  host     : process.env.DB_HOST,
+  user     : process.env.DB_USER,
   port: 3306,
-  password : "root",
-  database : "groupomania"
+  password : process.env.DB_PASSWORD,
+  database : process.env.DB_DATABASE
   });
 
   db.connect(function(err) {

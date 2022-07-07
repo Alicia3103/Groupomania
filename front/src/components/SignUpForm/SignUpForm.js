@@ -2,7 +2,7 @@ import axios from '../../api/axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { faCheck,faInfoCircle,faTimes  } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useAuth from '../../hooks/useAuth';
 import colors from '../../utils/styles/colors';
@@ -64,19 +64,20 @@ const SignUpForm = () => {
     const[passwordFocus,setPasswordFocus]=useState(false)
 
     const[errMsg,setErrMsg]=useState('')
-    const[susccess,setSuccess]=useState(false)
+
     
     
     const{setAuth}= useAuth()
 
     const navigate=useNavigate()
-    const location= useLocation()
+  
     
 
     
     useEffect(()=>{
         userRef.current.focus();
     },[])
+
     useEffect(()=>{
         setValidNom(NOM_REGEX.test(nom));
 

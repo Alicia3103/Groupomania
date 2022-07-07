@@ -6,7 +6,6 @@ const Post = ({ post }) => {
 
   return (
     <div className="post">
-        {console.log(post)}
       <h2>{post.Title}</h2>
       <img
         src="https://picsum.photos/1500/400"
