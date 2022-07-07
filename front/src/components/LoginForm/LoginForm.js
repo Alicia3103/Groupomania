@@ -35,9 +35,9 @@ border-color:${colors.secondary};
 const InputButton=styled.input`
 margin:10px;
 padding:5px;
-background-color:${colors.primary};
+background-color:${colors.darkerSecondary};
 border-radius:15px;
-border-color:${colors.primary}
+border-color:${colors.darkerSecondary}
 `
 const LOGIN_URL='/api/auth/login'
 
@@ -50,8 +50,10 @@ const LoginForm = () => {
 
     const userRef=useRef()
     const errRef=useRef()
+
     const[email,setEmail]=useState('')
     const[password,setPassword]=useState('')
+    
     const[errMsg,setErrMsg]=useState('')
     
 
@@ -76,20 +78,20 @@ const LoginForm = () => {
         const accessToken = response?.data?.token
         const userId=response?.data?.userId
         console.log(accessToken)
-        setAuth({userId,email,accessToken})
+        setAuth({userId,accessToken})
         setEmail('')
         setPassword('')
       
         navigate(from,{replace:true})
     }catch(err){
         if(!err?.response){
-            setErrMsg('No Server Response')
-        }else if(err.response?.status ===400){
-            setErrMsg('Missing email or password') 
+            setErrMsg('Pas de réponse Serveur')
         }else if(err.response?.status ===401){
-            setErrMsg('UnAuthorized') 
+            setErrMsg('Non autorisé') 
+        }else if(err.response?.status ===409){
+            setErrMsg('Compte désactivé') 
         }else{
-            setErrMsg('Login Failed')
+            setErrMsg('La connexion a echouée')
         }
         errRef.current.focus()
 

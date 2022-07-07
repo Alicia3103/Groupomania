@@ -45,7 +45,7 @@ const Navigation = () => {
                 <NavLink to="/user">
                     <NavIcon><FontAwesomeIcon icon={faUser}></FontAwesomeIcon></NavIcon>
                 </NavLink>
-                <NavLink to="">
+                <NavLink to="/logout">
                 <NavIcon><FontAwesomeIcon icon={faRightFromBracket}></FontAwesomeIcon></NavIcon>
                 </NavLink>
             </NavList>

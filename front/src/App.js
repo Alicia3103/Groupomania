@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import User from "./pages/User";
 import RequireAuth from "./components/RequireAuth/RequireAuth";
 import Layout from "./components/Layout";
+import LogOut from "./pages/LogOut";
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -29,7 +30,9 @@ const App = () => {
 				<Route element={<RequireAuth/>}>
 					<Route path="/" element={<Home/>} />
 					<Route path="/user" element={<User/>} />
+					
 				</Route>
+				<Route path="/logout" element={<LogOut/>} />
 				<Route path="*" element={<Connexion/>} />
 			</Route>
 		</Routes>

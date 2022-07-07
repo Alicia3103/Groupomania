@@ -25,9 +25,26 @@ bcrypt.genSalt(parseInt(process.env.SALT))
                 console.log(err)
                 return res.status (400).json ({error:'creation de compte impossible'})
                 }
-            res.status(201).json({ message: "Utilisateur créé"})
-
+                db.query('SELECT * FROM user WHERE Email =?', [email], 
+                    function(err, result) {
+                    
+                    if(err || !result.length) {
+                        return res.status(404).json({ message: 'Utilisateur non trouvé'});
+                    }
+                    const user = result[0];
+                    if (user.Actif ===1 ){
+                        return res.status(401).json({message: 'Compte désactivé'});
+                    }     
+                    return res.status(201).json({
+                        userId: user.Id,
+                        //encodage avec la fonction 'sign'
+                        token: jwt.sign({userId: user.Id}, secretToken,{expiresIn: '24h'}),
+                        
+                        message:'Utilisateur créé et connecté'
+                            })
+                    })
         })
+    
     })
     .catch(error =>{
         console.log(error)
@@ -49,11 +66,13 @@ exports.login = (req, res, next) => {
             return res.status(404).json({ message: 'Utilisateur non trouvé'});
         }
         const user = result[0];
-
+        if (user.Actif ===1 ){
+            return res.status(401).json({message: 'Compte désactivé'});
+        }    
             bcrypt.compare(password, user.Password) 
             .then(valid => {
                 if (!valid) {
-                    return res.status(401).json({message: 'Mot de passe incorrect !'});
+                    return res.status(409).json({message: 'Mot de passe incorrect !'});
                   }
                  return res.status(200).json({
                     userId: user.Id,
