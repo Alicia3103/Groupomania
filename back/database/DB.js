@@ -8,7 +8,7 @@ const db = mysql.createConnection({
 
   host     : process.env.DB_HOST,
   user     : process.env.DB_USER,
-  password : process.env.DB_PASSWORD,
+  password : process.env.DB_PASSWORD
 
   });
 
@@ -48,7 +48,7 @@ const db = mysql.createConnection({
     Title VARCHAR(255) , 
     Content TEXT, 
     ImageUrl VARCHAR(255),
-    CreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CreateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UpdateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UserId INT NOT NULL,
     PRIMARY KEY (Id),

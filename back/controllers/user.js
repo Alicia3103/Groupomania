@@ -32,7 +32,7 @@ bcrypt.genSalt(parseInt(process.env.SALT))
                         return res.status(404).json({ message: 'Utilisateur non trouvé'});
                     }
                     const user = result[0];
-                    if (user.Actif ===1 ){
+                    if (user.Actif ===0 ){
                         return res.status(401).json({message: 'Compte désactivé'});
                     }     
                     return res.status(201).json({

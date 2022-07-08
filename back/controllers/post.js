@@ -6,8 +6,8 @@ const userId=req.auth.userId
 const title= req.body.title
 const content=req.body.content
 const imageUrl= "ici" //req.protocol+"://"+req.headers.host +"/images/"+req.file.filename if req.file exist
+console.log(req)
 console.log(req.body)
-console.log(req.body.selectedFile)
 
 db.query('INSERT INTO post SET UserId=?, Title=?,Content =?, ImageUrl =?',[userId,title,content,imageUrl] ,function(err,result){
     if(err){

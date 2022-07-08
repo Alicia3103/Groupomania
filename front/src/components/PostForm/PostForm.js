@@ -9,15 +9,17 @@ const PostForm = () => {
     const [isImage,setIsImage]=useState(false)
     const {auth}=useAuth()
     const userId=auth.userId
+  const post={'titre': title,
+  'content': content,
+  'userId':userId
 
+  }
     const postData = new FormData()
     
     
     const handleSubmit=async(e)=>{
         e.preventDefault()
-        postData.set('titre', title)
-        postData.set('content', content)
-        postData.set('userId',userId)
+        postData.append("post",JSON.stringify(post))
         if(isImage){
             postData.append("file",selectedFile)
         }
