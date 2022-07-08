@@ -27,11 +27,9 @@ const PostForm = () => {
         try{
             const response = await axiosPrivate.post(POST_URL,
                
-              postData      ,{   
+             postData      ,{   
                         headers:{'Content-Type':'multipart/form-data'},
                         withCredentials:true
-                        
-
                     })
        
                     console.log(response)

@@ -25,24 +25,7 @@ bcrypt.genSalt(parseInt(process.env.SALT))
                 console.log(err)
                 return res.status (400).json ({error:'creation de compte impossible'})
                 }
-                db.query('SELECT * FROM user WHERE Email =?', [email], 
-                    function(err, result) {
-                    
-                    if(err || !result.length) {
-                        return res.status(404).json({ message: 'Utilisateur non trouvé'});
-                    }
-                    const user = result[0];
-                    if (user.Actif ===0 ){
-                        return res.status(401).json({message: 'Compte désactivé'});
-                    }     
-                    return res.status(201).json({
-                        userId: user.Id,
-                        //encodage avec la fonction 'sign'
-                        token: jwt.sign({userId: user.Id}, secretToken,{expiresIn: '24h'}),
-                        
-                        message:'Utilisateur créé et connecté'
-                            })
-                    })
+                res.status(201).json({ message: "Utilisateur créé"})    
         })
     
     })
@@ -84,6 +67,18 @@ exports.login = (req, res, next) => {
          })
       
   };
+  exports.getUser = (req, res, next) => {
+    const userId=req.auth.userId
+      db.query('SELECT Nom,Prenom,Email FROM user WHERE Id =? ',[userId], function(err,result){
+          if(err){
+            console.log(err)
+            return res.status(404).json({ error:"aucun utilisateur trouvé"})
+          }
+          
+          return res.status(200).json({ result})
+        })
+      };
+
   exports.unactiveAccount = (req, res) => { //désactive son propre compte
     const id = req.auth.userId; // arriver a recuperer le userId
     

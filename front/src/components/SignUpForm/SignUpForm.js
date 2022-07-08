@@ -37,8 +37,9 @@ border-color:${colors.darkerSecondary};
 const NOM_REGEX = /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ-]+$/;
 const EMAIL_REGEX = /^\w+([.-_]?\w+)*@\w+([.-_]?\w+)*(.\w{2,4})+$/;
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-const REGISTER_URL = '/api/auth/signup';
 
+const REGISTER_URL = '/api/auth/signup';
+const LOGIN_URL='/api/auth/login'
 
 
 const SignUpForm = () => {
@@ -109,12 +110,20 @@ const SignUpForm = () => {
             return
         }
         try{
-            const response = await axios.post(REGISTER_URL,
+
+            await axios.post(REGISTER_URL,
                {nom,prenom,email,password},
                     {
                         headers:{'Content-Type':'application/json'},
                         withCredentials:true
                     })
+            const response = await axios.post(LOGIN_URL,
+                        JSON.stringify({email,password}),
+                        {
+                            headers:{'Content-Type':'application/json'}, 
+                            withCredentials: true
+                        }
+                    )
         const accessToken = response?.data?.token
         const userId=response?.data?.userId
         console.log(accessToken)

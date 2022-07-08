@@ -10,6 +10,7 @@ const auth = require('../middlewares/auth');
 //routes avec tous les middleware nécessaires
 router.post('/signup',emailValid,passwordValid,userCtrl.signup);
 router.post('/login',limitMax.limiter, userCtrl.login);
+router.get('/user',auth, userCtrl.getUser);
 router.put('/unactiveAccount',auth, userCtrl.unactiveAccount);
 
 module.exports = router;
