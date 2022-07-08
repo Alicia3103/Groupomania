@@ -22,6 +22,7 @@ app.use(cors({credentials: true, origin: 'http://localhost:3000',optionsSuccessS
 
 
 app.use(express.json());
+
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 //utilisation des routes

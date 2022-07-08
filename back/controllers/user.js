@@ -66,7 +66,7 @@ exports.login = (req, res, next) => {
             return res.status(404).json({ message: 'Utilisateur non trouvé'});
         }
         const user = result[0];
-        if (user.Actif ===1 ){
+        if (user.Actif ===0 ){
             return res.status(401).json({message: 'Compte désactivé'});
         }    
             bcrypt.compare(password, user.Password) 
@@ -87,7 +87,7 @@ exports.login = (req, res, next) => {
   exports.unactiveAccount = (req, res) => { //désactive son propre compte
     const id = req.auth.userId; // arriver a recuperer le userId
     
-    db.query('UPDATE user SET Actif=1 WHERE Id =?', [id],
+    db.query('UPDATE user SET Actif=0 WHERE Id =?', [id],
     function(err, result) {
         if(err || result.affectedRows===0) {
             return res.status(400).json({ err : "Utilisateur non trouvé" });

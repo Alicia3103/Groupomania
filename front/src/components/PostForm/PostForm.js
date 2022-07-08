@@ -21,16 +21,18 @@ const PostForm = () => {
         if(isImage){
             postData.append("file",selectedFile)
         }
-
+        console.log(postData)
         try{
             const response = await axiosPrivate.post(POST_URL,
-               postData,
-                    {
+               
+              postData      ,{   
                         headers:{'Content-Type':'multipart/form-data'},
                         withCredentials:true
+                        
+
                     })
        
-
+                    console.log(response)
         }catch(err){
             console.log(err)
         }
