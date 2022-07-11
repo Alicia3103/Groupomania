@@ -128,6 +128,10 @@ const SignUpForm = () => {
         const userId=response?.data?.userId
         console.log(accessToken)
         setAuth({userId,accessToken})
+        setEmail('')
+        setPassword('')
+        setPrenom('')
+        setNom('')
         navigate("/")
 
         }catch(err){

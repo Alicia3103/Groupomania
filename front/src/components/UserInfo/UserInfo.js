@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import useAuth from '../../hooks/useAuth';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import colors from '../../utils/styles/colors';
 
@@ -12,6 +13,7 @@ border-radius:10px;
 `
 const UserInfo = () => {
     const [user, setUser] = useState();
+    const[errMsg,setErrMsg]=useState('')
     const axiosPrivate = useAxiosPrivate()
     const navigate = useNavigate();
     const location = useLocation();
@@ -45,7 +47,40 @@ const UserInfo = () => {
         }
         // eslint-disable-next-line
     }, [])
+    const{setAuth}= useAuth()
 
+    const handleClick = (e)=>{
+        e.preventDefault()
+
+        const DELETE_URL='/api/auth/unactiveAccount'
+        
+        try{
+            axiosPrivate.put(DELETE_URL)
+            const accessToken = ''
+            const userId=''
+            
+            setAuth({userId,accessToken})
+           
+          
+            navigate('/')
+        }catch(err){
+            if(!err?.response){
+                setErrMsg('Pas de réponse Serveur')
+            }else if(err.response?.status ===401){
+                setErrMsg('Vous ne possédez pas ce compte') 
+            }else if(err.response?.status ===404){
+                setErrMsg('Utilisateur non trouvé') 
+            }else{
+                setErrMsg('La désactivation a echouée')
+            }
+          
+    
+        }  
+        
+        
+
+   
+    }
 
 
     return (
@@ -54,7 +89,7 @@ const UserInfo = () => {
             <p className='nomPrenom'>{user?.Nom} {user?.Prenom}</p>
             <p className='mail'>{user?.Email}</p>
             </div>
-            <button className='desactiverCompte'>Désactiver le compte</button>
+            <button onClick={handleClick} className='desactiverCompte'>Désactiver le compte</button>
         </UserInfoContainer>
     );
 };

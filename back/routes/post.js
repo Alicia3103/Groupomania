@@ -11,7 +11,7 @@ const postCtrl = require('../controllers/post');
 //router ATTENTION rajouter auth
 router.get('/',auth, postCtrl.getAllPost);
 router.get('/byUser', auth, postCtrl.getAllUserPost);
-router.post('/',auth,postCtrl.createPost);
+router.post('/',auth,multer,postCtrl.createPost);
 router.put('/:id', auth, multer, postCtrl.modifyPost);
 router.delete('/:id', auth, postCtrl.deletePost);
 router.post('/:id/like', auth, postCtrl.likePost);

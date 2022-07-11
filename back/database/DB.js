@@ -9,7 +9,6 @@ const db = mysql.createConnection({
   host     : process.env.DB_HOST,
   user     : process.env.DB_USER,
   password : process.env.DB_PASSWORD
-
   });
 
   db.connect(function(err) {
@@ -33,8 +32,8 @@ const db = mysql.createConnection({
     IsAdmin TINYINT NOT NULL DEFAULT 0,
     Actif TINYINT NOT NULL DEFAULT 1,
     CreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UpdateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UnactiveTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdateTime TIMESTAMP DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    UnactiveTime TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (Id),
     UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
     UNIQUE INDEX Email_UNIQUE (Email ASC) VISIBLE)`, 
@@ -49,7 +48,7 @@ const db = mysql.createConnection({
     Content TEXT, 
     ImageUrl VARCHAR(255),
     CreateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UpdateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdateTime TIMESTAMP DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     UserId INT NOT NULL,
     PRIMARY KEY (Id),
     UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
@@ -57,6 +56,16 @@ const db = mysql.createConnection({
     function (err, result) {
       if (err) throw err;
       console.log("Table post crée !");
+  });
+  db.query(`CREATE TABLE IF NOT EXISTS userLiked (  
+    Id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    UserId INT  NOT NULL,
+    PostId INT  NOT NULL,
+    FOREIGN KEY(UserId) REFERENCES user(Id),
+    FOREIGN KEY(PostId) REFERENCES post(Id))`, 
+    function (err, result) {
+      if (err) throw err;
+      console.log("Table userLiked crée !");
   });
 
   module.exports = db

@@ -8,22 +8,20 @@ const PostForm = () => {
     const [selectedFile, setSelectedFile] = useState();
     const [isImage,setIsImage]=useState(false)
     const {auth}=useAuth()
-    const userId=auth.userId
-  const post={'titre': title,
-  'content': content,
-  'userId':userId
-
+    
+  const post={'title': title,
+  'content': content
   }
     const postData = new FormData()
     
     
     const handleSubmit=async(e)=>{
         e.preventDefault()
-        postData.append("post",JSON.stringify(post))
-        if(isImage){
-            postData.append("file",selectedFile)
-        }
-        console.log(postData)
+        postData.set("post",JSON.stringify(post))
+        
+        postData.append("image",selectedFile)
+        
+       
         try{
             const response = await axiosPrivate.post(POST_URL,
                
@@ -64,9 +62,7 @@ const PostForm = () => {
           type="file"
           accept=".jpg, .jpeg, .png"
           
-          onChange={(e) => {
-            setSelectedFile(e.target.files[0])
-            setIsImage(true)}}
+          onChange={(e) => setSelectedFile(e.target.files[0])}
         />
          <input className='send' type = "submit" id='post-submit' value='Envoyer'/>
       </form>

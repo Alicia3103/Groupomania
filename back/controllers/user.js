@@ -80,12 +80,13 @@ exports.login = (req, res, next) => {
       };
 
   exports.unactiveAccount = (req, res) => { //désactive son propre compte
+    
     const id = req.auth.userId; // arriver a recuperer le userId
     
     db.query('UPDATE user SET Actif=0 WHERE Id =?', [id],
     function(err, result) {
         if(err || result.affectedRows===0) {
-            return res.status(400).json({ err : "Utilisateur non trouvé" });
+            return res.status(404).json({ err : "Utilisateur non trouvé" });
         } 
         res.status(200).json({ message: "Compte désactivé !"})
     });

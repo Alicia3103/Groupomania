@@ -77,7 +77,7 @@ const LoginForm = () => {
         )
         const accessToken = response?.data?.token
         const userId=response?.data?.userId
-        console.log(accessToken)
+
         setAuth({userId,accessToken})
         setEmail('')
         setPassword('')
@@ -87,11 +87,11 @@ const LoginForm = () => {
         if(!err?.response){
             setErrMsg('Pas de réponse Serveur')
         }else if(err.response?.status ===401){
-            setErrMsg('Mot de passe erroné') 
+            setErrMsg('Compte désactivé') 
         }else if(err.response?.status ===404){
             setErrMsg('Utilisateur non trouvé') 
         }else if(err.response?.status ===409){
-            setErrMsg('Compte désactivé') 
+            setErrMsg('Mot de passe erroné') 
         }else if(err.response?.status ===429){
             setErrMsg("Trop d'essais, essayez dans 5 min") 
         }else{

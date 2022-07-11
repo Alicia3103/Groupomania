@@ -43,7 +43,7 @@ const LogOut = () => {
     useEffect(()=>{
 
         try{
-         setAuth({userId:'',email:'',accessToken:''})   
+         setAuth({userId:'',accessToken:''})   
         }catch(err){
             console.log(err)
         }

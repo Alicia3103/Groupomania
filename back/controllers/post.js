@@ -2,12 +2,14 @@ const db = require("../database/DB")
 
 //fonction création du post
 exports.createPost=(req,res,next)=>{
-const userId=req.auth.userId
-const title= req.body.title
-const content=req.body.content
-const imageUrl= "ici" //req.protocol+"://"+req.headers.host +"/images/"+req.file.filename if req.file exist
+ 
+  const body=JSON.parse(req.body.post)
 
-console.log(req.body)
+const userId=req.auth.userId
+const title= body.title
+const content=body.content
+let imageUrl= ''
+if(req.file) imageUrl= req.protocol+"://"+req.headers.host +"/images/"+req.file.filename 
 
 db.query('INSERT INTO post SET UserId=?, Title=?,Content =?, ImageUrl =?',[userId,title,content,imageUrl] ,function(err,result){
     if(err){

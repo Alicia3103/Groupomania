@@ -8,7 +8,7 @@ const Post = ({ post }) => {
     <div className="post">
       <h2>{post.Title}</h2>
       <img
-        src="https://picsum.photos/1500/400"
+        src={post.ImageUrl}
         className="post-img"
         id={post.Id}
         height={75}
