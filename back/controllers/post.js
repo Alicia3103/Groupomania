@@ -1,15 +1,16 @@
 const db = require("../database/DB")
-
+const fs = require('fs')
 //fonction création du post
 exports.createPost=(req,res,next)=>{
  
-  const body=JSON.parse(req.body.post)
+const body=JSON.parse(req.body.post)
 
 const userId=req.auth.userId
 const title= body.title
 const content=body.content
 let imageUrl= ''
 if(req.file) imageUrl= req.protocol+"://"+req.headers.host +"/images/"+req.file.filename 
+
 
 db.query('INSERT INTO post SET UserId=?, Title=?,Content =?, ImageUrl =?',[userId,title,content,imageUrl] ,function(err,result){
     if(err){
@@ -25,18 +26,21 @@ db.query('INSERT INTO post SET UserId=?, Title=?,Content =?, ImageUrl =?',[userI
 //fonction supression du post
 exports.deletePost=(req,res,next)=>{
   const id = req.body.id
-  
-  db.query('SELECT * FROM post WHERE Id=',[id],function(err,result){
+
+
+  db.query('SELECT * FROM post WHERE Id=?',[id],function(err,result){
+    
     if(err || !result.length) {
       return res.status(404).json({ message: 'Post non trouvé'});
       }
-    if(req.auth.userId ===result[0].UserId){
+  
+    if(req.auth.userId ===result[0].UserId || req.auth.isAdmin===1){
         const imageUrl = result[0].ImageUrl
         if (imageUrl) {
           const filename = imageUrl.split('/images/')[1];
           fs.unlinkSync(`images/${filename}`)
         }
-        db.query('DELETE * FROM post WHERE Id=',[id],function(err,result){
+        db.query('DELETE * FROM post WHERE Id=?',[id],function(err,result){
           if(err || !result.length) {
             return res.status(404).json({ message: 'Post non supprimé'});
           }
@@ -52,32 +56,38 @@ exports.deletePost=(req,res,next)=>{
 
 //fonction modification de post
 exports.modifyPost=(req,res,next)=>{
-  const id = req.body.id
+  const body=JSON.parse(req.body.post)
   
-  db.query('SELECT * FROM post WHERE Id=',[id],function(err,result){
+  const id=body.id
+  
+
+
+  db.query('SELECT * FROM post WHERE Id=?', [id], 
+    function(err, result) {
     if(err || !result.length) {
       return res.status(404).json({ message: 'Post non trouvé'});
       }
     if(req.auth.userId ===result[0].UserId){
-      const newImageUrl = result[0].ImageUrl//req.protocol+"://"+req.headers.host +"/images/"+req.file.filename if req.file exist
-      const newTitle= "new title"//JSON.parse(req.body.title)
-      const newContent = result[0].Content//JSON.parse(req.body.content)
-      const newImage= req.file
-      console.log(imageUrl)
-
-
-        if (imageUrl!=="" && newImage) {
-          const filename = imageUrl.split('/images/')[1];
-          fs.unlinkSync(`images/${filename}`)
-
-        }
-
-        db.query('UPDATE post SET Title=?, Content=?, ImageUrl=? WHERE Id =?', [newTitle,newContent,newImageUrl,id],function(err,result){
-          if(err || !result.length) {
-            return res.status(404).json({ message: 'Post non supprimé'});
+      let newImageUrl= ''
+      const oldImage= result[0].ImageUrl
+     
+      if(req.file) newImageUrl= req.protocol+"://"+req.headers.host +"/images/"+req.file.filename 
+      const newTitle= body.title
+      const newContent = body.content
+   
+        db.query('UPDATE post SET Title=?, Content=?, ImageUrl =? WHERE Id=?', [newTitle,newContent,newImageUrl,id],function(err,result){
+          if(err ) {
+            return res.status(404).json({ message: 'Post non modifié'});
           }
           return res.status(200).json({ message: 'Post modifié'})
         })
+
+        if (newImageUrl!=="" && oldImage) {
+          console.log("remplacer l'image")
+          const filename = oldImage.split('/images/')[1];
+          fs.unlinkSync(`images/${filename}`)
+
+        }
     } 
   })
 }

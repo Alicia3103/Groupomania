@@ -75,10 +75,12 @@ const LoginForm = () => {
                 withCredentials: true
             }
         )
+        console.log(response)
         const accessToken = response?.data?.token
         const userId=response?.data?.userId
+        const isAdmin=response?.data?.isAdmin
 
-        setAuth({userId,accessToken})
+        setAuth({userId,accessToken,isAdmin})
         setEmail('')
         setPassword('')
       

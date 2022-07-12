@@ -42,7 +42,7 @@ exports.login = (req, res, next) => {
     const email = req.body.email
     const password=req.body.password
     //méthode 'select * from user where email=?' pour trouver l'utilisateur dont l'email correspond
-    db.query('SELECT * FROM user WHERE Email =?', [email], 
+    db.query('SELECT Id,Actif,IsAdmin,Password FROM user WHERE Email =?', [email], 
     function(err, result) {
 
         if(err || !result.length) {
@@ -59,8 +59,9 @@ exports.login = (req, res, next) => {
                   }
                  return res.status(200).json({
                     userId: user.Id,
+                    isAdmin:user.IsAdmin,
                     //encodage avec la fonction 'sign'
-                    token: jwt.sign({userId: user.Id}, secretToken,{expiresIn: '24H'})
+                    token: jwt.sign({userId: user.Id, isAdmin:user.IsAdmin}, secretToken,{expiresIn: '24H'})
                 })
           })
           .catch(error => res.status(500).json({error}));

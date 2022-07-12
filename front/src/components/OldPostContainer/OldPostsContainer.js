@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import colors from '../../utils/styles/colors';
-
-import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import colors from '../../utils/styles/colors';
 import Post from '../Post/Post';
 
-
-
-const UserPostsContainer=styled.div`
+const OldPostsContainers=styled.div `
 display:flex;
 flex-direction: column;
 justify-content: space-around;
@@ -18,8 +15,8 @@ background-color:${colors.secondary};
 border-radius:10px;
 `
 
-const UserPosts=()=>{
-    const [userPosts, setUserPosts] = useState();
+const OldPostsContainer = () => {
+    const [posts, setPosts] = useState();
     const axiosPrivate = useAxiosPrivate()
     const navigate = useNavigate();
     const location = useLocation();
@@ -35,7 +32,7 @@ const UserPosts=()=>{
                     signal: controller.signal
                 });
               
-                isMounted && setUserPosts(response.data.result);
+                isMounted && setPosts(response.data.result);
             } catch (err) {
                 console.error(err);
                 navigate('/login', { state: { from: location }, replace: true });
@@ -51,18 +48,17 @@ const UserPosts=()=>{
         }
         // eslint-disable-next-line
     }, [])
-
     return (
-        <UserPostsContainer>
-           {userPosts?.length
+        <OldPostsContainers>
+                    {posts?.length
                 ? (
                     <div>
-                        {userPosts.map((post,index)=> <Post post={post} key={index}id={post.Id}/>)}
+                        {posts.map((post)=> <Post post={post} key={post.Id}/>)}
                     </div>
                 ) : <p>No posts to display</p>
             }
-        </UserPostsContainer>
+                    </OldPostsContainers>
     );
 };
 
-export default UserPosts;
+export default OldPostsContainer;

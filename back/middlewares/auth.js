@@ -9,8 +9,10 @@ module.exports = (req, res, next) => {
     const decodedToken = jwt.verify(headerToken, process.env.SECRET_TOKEN);
   
     const userId = decodedToken.userId;
+    const isAdmin = decodedToken.isAdmin;
+    
     //ajout de l'userId lors d'une requete delete (pour comparaison plus tard)
-    req.auth = { userId };  
+    req.auth = { userId, isAdmin };  
     // s'il y a un userId et que ce dernier n'est pas le même que celui du header de la requete
     if (req.body.userId && req.body.userId !== userId) {
       throw 'Invalid user ID';

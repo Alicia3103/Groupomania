@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { axiosPrivate } from '../../api/axios';
-import useAuth from '../../hooks/useAuth';
+
+
+
 const POST_URL='api/post'
 const PostForm = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedFile, setSelectedFile] = useState();
-    const [isImage,setIsImage]=useState(false)
-    const {auth}=useAuth()
+    
     
   const post={'title': title,
   'content': content
@@ -21,16 +22,17 @@ const PostForm = () => {
         
         postData.append("image",selectedFile)
         
-       
         try{
-            const response = await axiosPrivate.post(POST_URL,
-               
-             postData      ,{   
+            await axiosPrivate.post(POST_URL,
+               postData,{   
                         headers:{'Content-Type':'multipart/form-data'},
                         withCredentials:true
                     })
-       
-                    console.log(response)
+                    setTitle('')
+                    setContent('')
+                    setSelectedFile()
+                    
+
         }catch(err){
             console.log(err)
         }

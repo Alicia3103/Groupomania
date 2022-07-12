@@ -126,8 +126,9 @@ const SignUpForm = () => {
                     )
         const accessToken = response?.data?.token
         const userId=response?.data?.userId
+        const isAdmin=response?.data?.isAdmin
         console.log(accessToken)
-        setAuth({userId,accessToken})
+        setAuth({userId,accessToken,isAdmin})
         setEmail('')
         setPassword('')
         setPrenom('')
@@ -135,10 +136,18 @@ const SignUpForm = () => {
         navigate("/")
 
         }catch(err){
-            if (!err?.response) {
-                setErrMsg('Pas de réponse Serveur');
-            } else {
-                setErrMsg("l'inscription a échouée")
+            if(!err?.response){
+                setErrMsg('Pas de réponse Serveur')
+            }else if(err.response?.status ===401){
+                setErrMsg('Compte désactivé') 
+            }else if(err.response?.status ===404){
+                setErrMsg('Utilisateur non trouvé') 
+            }else if(err.response?.status ===409){
+                setErrMsg('Mot de passe erroné') 
+            }else if(err.response?.status ===429){
+                setErrMsg("Trop d'essais, essayez dans 5 min") 
+            }else{
+                setErrMsg('La connexion a echouée')
             }
             errRef.current.focus();
         }
