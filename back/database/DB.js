@@ -46,7 +46,6 @@ db.query(
 db.query(
 	`CREATE TABLE IF NOT EXISTS post (
     Id INT NOT NULL AUTO_INCREMENT, 
-    Likes INT DEFAULT 0,
     Title VARCHAR(255) , 
     Content TEXT, 
     ImageUrl VARCHAR(255),
@@ -55,7 +54,7 @@ db.query(
     UserId INT NOT NULL,
     PRIMARY KEY (Id),
     UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
-    FOREIGN KEY(UserId) REFERENCES user(Id))`,
+    FOREIGN KEY(UserId) REFERENCES user(Id) ON DELETE CASCADE)`,
 	function (err, result) {
 		if (err) throw err
 		console.log('Table post crée !')
@@ -66,8 +65,8 @@ db.query(
     Id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
     UserId INT  NOT NULL,
     PostId INT  NOT NULL,
-    FOREIGN KEY(UserId) REFERENCES user(Id),
-    FOREIGN KEY(PostId) REFERENCES post(Id))`,
+    FOREIGN KEY(UserId) REFERENCES user(Id) ON DELETE CASCADE,
+    FOREIGN KEY(PostId) REFERENCES post(Id) ON DELETE CASCADE)`,
 	function (err, result) {
 		if (err) throw err
 		console.log('Table userLiked crée !')

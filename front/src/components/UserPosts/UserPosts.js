@@ -5,7 +5,6 @@ import colors from '../../utils/styles/colors'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Post from '../Post/Post'
-import useAuth from '../../hooks/useAuth'
 
 const UserPostsContainer = styled.div`
   display: flex;
@@ -18,9 +17,7 @@ const UserPostsContainer = styled.div`
 `
 
 const UserPosts = () => {
-  const { auth } = useAuth()
   const [userPosts, setUserPosts] = useState()
-  const [likedPosts, setLikedPosts] = useState([])
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
@@ -56,7 +53,7 @@ const UserPosts = () => {
       {userPosts?.length ? (
         <div>
           {userPosts.map((post) => (
-            <Post post={post} likedPosts={likedPosts} key={post.Id} />
+            <Post post={post} key={post.Id} />
           ))}
         </div>
       ) : (

@@ -27,7 +27,6 @@ const OldPostsContainer = () => {
   const location = useLocation()
 
   useEffect(() => {
-    console.log('test container')
     let isMounted = true
     const controller = new AbortController()
 

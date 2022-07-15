@@ -27,7 +27,6 @@ function Post({ post }) {
   const [editingSelectedFile, setEditingSelectedFile] = useState()
 
   const [isEditing, setIsEditing] = useState(false)
-  console.log('test post')
 
   const handleEdit = (e) => {
     e.preventDefault()
@@ -85,7 +84,7 @@ function Post({ post }) {
             ) : null}
           </div>
           <div>
-            <LikeButton post={post}  />
+            <LikeButton post={post} />
           </div>
         </div>
       ) : (
