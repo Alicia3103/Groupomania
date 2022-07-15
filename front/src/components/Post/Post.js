@@ -10,7 +10,7 @@ const Image = styled.img`
   width: 60%;
 `
 
-function Post({ post, likedPosts }) {
+function Post({ post }) {
   const { auth } = useAuth()
 
   const { userId } = auth
@@ -27,12 +27,7 @@ function Post({ post, likedPosts }) {
   const [editingSelectedFile, setEditingSelectedFile] = useState()
 
   const [isEditing, setIsEditing] = useState(false)
-
-  post.IsLiked = false
-
-  if (likedPosts.includes(postId)) {
-    post.IsLiked = true
-  }
+  console.log('test post')
 
   const handleEdit = (e) => {
     e.preventDefault()
@@ -90,8 +85,7 @@ function Post({ post, likedPosts }) {
             ) : null}
           </div>
           <div>
-            <LikeButton post={post} />
-            {post.Likes}
+            <LikeButton post={post}  />
           </div>
         </div>
       ) : (

@@ -17,7 +17,8 @@ const OldPostsContainers = styled.div`
 `
 
 const OldPostsContainer = () => {
-  const{auth}=useAuth()
+  const { auth } = useAuth()
+
   const [posts, setPosts] = useState()
   const [likedPosts, setLikedPosts] = useState([])
 
@@ -26,6 +27,7 @@ const OldPostsContainer = () => {
   const location = useLocation()
 
   useEffect(() => {
+    console.log('test container')
     let isMounted = true
     const controller = new AbortController()
 
@@ -35,29 +37,28 @@ const OldPostsContainer = () => {
           signal: controller.signal,
         })
 
-        isMounted && setPosts(response.data.result) 
+        isMounted && setPosts(response.data.result)
       } catch (err) {
         console.error(err)
         navigate('/login', { state: { from: location }, replace: true })
       }
-
     }
     const getLikedPosts = async () => {
       try {
-        const response = await axiosPrivate.get(`/api/post/${auth.userId}/like`, {
-          signal: controller.signal,
-        })
+        const response = await axiosPrivate.get(
+          `/api/post/${auth.userId}/like`,
+          {
+            signal: controller.signal,
+          }
+        )
         setLikedPosts(response.data.likedPost)
-        
       } catch (err) {
         console.error(err)
         navigate('/login', { state: { from: location }, replace: true })
       }
-
     }
-
-    getPosts()
     getLikedPosts()
+    getPosts()
 
     return () => {
       isMounted = false

@@ -118,24 +118,24 @@ exports.getAllPost = (req, res, next) => {
 
 exports.getLikedPost = (req, res, next) => {
 	const userId = req.auth.userId
+	const postId = req.params.id
 	db.query(
-		'SELECT PostId FROM userLiked WHERE UserId=?',
-		[userId],
+		'SELECT PostId FROM userLiked WHERE PostId=? AND UserId=?',
+		[postId, userId],
 		function (err, result) {
 			if (err) {
 				return res.status(404).json({ error: 'err' })
 			}
-			let likedPost = []
 			if (result.length) {
-				for (let i = 0; i < result.length; i++) {
-					likedPost.push(result[i].PostId)
-				}
-
-				return res.status(200).json({ likedPost })
+				const isLiked = true
+				return res.status(200).json({ isLiked })
 			}
+			const isLiked = false
+			return res.status(200).json({ isLiked })
 		}
 	)
 }
+
 //fonction like
 
 exports.likePost = (req, res, next) => {
@@ -157,7 +157,17 @@ exports.likePost = (req, res, next) => {
 						if (err) {
 							return res.status(404).json({ error: 'Like non supprimé' })
 						}
-						return res.status(200).json({ message: 'Like supprimé' })
+						db.query(
+							'UPDATE post SET Likes=Likes-1 WHERE  Id=?',
+							[postId],
+							function (err, result) {
+								if (err) {
+									return res.status(400).json({ error: 'Like non supprimé-1' })
+								}
+								console.log(result)
+								return res.status(200).json({ message: 'Like supprimé-1' })
+							}
+						)
 					}
 				)
 			} else {
@@ -171,7 +181,18 @@ exports.likePost = (req, res, next) => {
 								.status(400)
 								.json({ error: 'impossible de liker le post' })
 						}
-						return res.status(200).json({ message: 'Post liké' })
+
+						db.query(
+							'UPDATE post SET Likes=Likes+1 WHERE  Id=?',
+							[postId],
+							function (err, result) {
+								if (err) {
+									return res.status(404).json({ error: 'Like non ajouté+1' })
+								}
+								console.log(result)
+								return res.status(200).json({ message: 'Like ajouté+1' })
+							}
+						)
 					}
 				)
 			}

@@ -42,6 +42,7 @@ const NewPostContainer = styled.div`
 `
 
 const Home = () => {
+  
   return (
     <HomePage>
       <Header />

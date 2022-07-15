@@ -18,7 +18,7 @@ const UserPostsContainer = styled.div`
 `
 
 const UserPosts = () => {
-  const{auth}=useAuth()
+  const { auth } = useAuth()
   const [userPosts, setUserPosts] = useState()
   const [likedPosts, setLikedPosts] = useState([])
   const axiosPrivate = useAxiosPrivate()
@@ -41,22 +41,8 @@ const UserPosts = () => {
         navigate('/login', { state: { from: location }, replace: true })
       }
     }
-    const getLikedPosts = async () => {
-      try {
-        const response = await axiosPrivate.get(`/api/post/${auth.userId}/like`, {
-          signal: controller.signal,
-        })
-        setLikedPosts(response.data.likedPost)
-        
-      } catch (err) {
-        console.error(err)
-        navigate('/login', { state: { from: location }, replace: true })
-      }
-
-    }
 
     getPosts()
-    getLikedPosts()
 
     return () => {
       isMounted = false
@@ -69,8 +55,8 @@ const UserPosts = () => {
     <UserPostsContainer>
       {userPosts?.length ? (
         <div>
-          {userPosts.map((post, index) => (
-             <Post post={post} likedPosts={likedPosts} key={post.Id} />
+          {userPosts.map((post) => (
+            <Post post={post} likedPosts={likedPosts} key={post.Id} />
           ))}
         </div>
       ) : (
