@@ -1,13 +1,13 @@
-import React from 'react';
+import React from 'react'
+import { faPen } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+function ModifyButton({ post }) {
+  return (
+    <button>
+      <FontAwesomeIcon icon={faPen} />
+    </button>
+  )
+}
 
-const ModifyButton = ({ post }) => {
-    
-  
-
-    return (
-        <button>bouton modifier </button>
-    );
-};
-
-export default ModifyButton;
+export default ModifyButton

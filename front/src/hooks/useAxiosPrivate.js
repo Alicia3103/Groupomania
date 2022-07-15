@@ -1,25 +1,22 @@
-import { axiosPrivate } from "../api/axios";
-import { useEffect } from "react";
-import useAuth from "./useAuth";
+import { axiosPrivate } from '../api/axios'
+import { useEffect } from 'react'
+import useAuth from './useAuth'
 
-const useAxiosPrivate=()=>{
-    
-    const {auth}=useAuth()
-   
-    useEffect(()=>{
+const useAxiosPrivate = () => {
+  const { auth } = useAuth()
 
-        const requestIntercept= axiosPrivate.interceptors.request.use(
-            config=>{
-                config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
-            return config
-        },(error)=>Promise.reject(error)
-             
-        )
-        return () => {
-            axiosPrivate.interceptors.request.eject(requestIntercept);
-        }
-
-    }, [auth])
-    return axiosPrivate
+  useEffect(() => {
+    const requestIntercept = axiosPrivate.interceptors.request.use(
+      (config) => {
+        config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
+        return config
+      },
+      (error) => Promise.reject(error)
+    )
+    return () => {
+      axiosPrivate.interceptors.request.eject(requestIntercept)
+    }
+  }, [auth])
+  return axiosPrivate
 }
 export default useAxiosPrivate

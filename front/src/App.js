@@ -1,14 +1,14 @@
-import React from "react";
-import {BrowserRouter, Routes,Route} from "react-router-dom"
-import Connexion from "./pages/Connexion";
+import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Connexion from './pages/Connexion'
 
 import { createGlobalStyle } from 'styled-components'
-import Home from "./pages/Home";
+import Home from './pages/Home'
 
-import User from "./pages/User";
-import RequireAuth from "./components/RequireAuth/RequireAuth";
-import Layout from "./components/Layout";
-import LogOut from "./pages/LogOut";
+import User from './pages/User'
+import RequireAuth from './components/RequireAuth/RequireAuth'
+import Layout from './components/Layout'
+import LogOut from './pages/LogOut'
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -21,23 +21,22 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const App = () => {
-	return (
-		<BrowserRouter>
-		<GlobalStyle/>
-		<Routes>
-			<Route path="/" element={<Layout/>}>
-				<Route path="/connexion" element={<Connexion/>} />
-				<Route element={<RequireAuth/>}>
-					<Route path="/" element={<Home/>} />
-					<Route path="/user" element={<User/>} />
-					
-				</Route>
-				<Route path="/logout" element={<LogOut/>} />
-				<Route path="*" element={<Connexion/>} />
-			</Route>
-		</Routes>
-		</BrowserRouter>
-	)
-};
+  return (
+    <BrowserRouter>
+      <GlobalStyle />
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="/connexion" element={<Connexion />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/user" element={<User />} />
+          </Route>
+          <Route path="/logout" element={<LogOut />} />
+          <Route path="*" element={<Connexion />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
+}
 
-export default App;
+export default App
