@@ -31,7 +31,7 @@ module.exports = (req, res, next) => {
 		return res
 			.status(401)
 			.json({
-				message:
+				error:
 					"le mot de passe n'est pas conforme, il doit contenir entre 8 et 30 caractères,au moins 1 chiffre et 1 majuscule",
 			})
 	}

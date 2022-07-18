@@ -17,11 +17,10 @@ exports.createPost = (req, res, next) => {
 		[userId, title, content, imageUrl],
 		function (err, result) {
 			if (err) {
-				console.log(err)
 				return res.status(400).json({ error: 'Post non enregistré' })
 			}
 
-			return res.status(200).json({ message: 'Publication ajoutée' })
+			return res.status(201).json({ message: 'Publication ajoutée' })
 		}
 	)
 }
@@ -29,11 +28,10 @@ exports.createPost = (req, res, next) => {
 //fonction supression du post  
 exports.deletePost = (req, res, next) => {
 	const id = req.params.id
-
 	db.query('SELECT * FROM post WHERE Id=?', [id], function (err, result) {
 		if (err || !result.length) {
 			return res.status(404).json({ message: 'Post non trouvé' })
-		} else if (req.auth.userId === result[0].UserId) {
+		} else if (req.auth.userId === result[0].UserId || req.auth.isAdmin===1) {
 			const imageUrl = result[0].ImageUrl
 			if (imageUrl) {
 				const filename = imageUrl.split('/images/')[1]
@@ -46,9 +44,7 @@ exports.deletePost = (req, res, next) => {
 				return res.status(200).json({ message: 'Post supprimé' })
 			})
 		} else {
-			return res
-				.status(401)
-				.json({ message: 'Vous ne pouvez pas supprimer ce post' })
+			return res.status(403).json({ message: 'Vous ne pouvez pas supprimer ce post' })
 		}
 	})
 }
@@ -96,6 +92,7 @@ exports.modifyPost = (req, res, next) => {
 				fs.unlinkSync(`images/${filename}`)
 			}
 		}
+		return res.status(403).json({ error: 'Vous ne pouvez pas modifier ce post' })
 	})
 }
 
@@ -191,10 +188,9 @@ exports.getAllUserPost = (req, res, next) => {
 		[userId],
 		function (err, result) {
 			if (err) {
-				console.log(err)
 				return res.status(404).json({ error: 'aucun posts trouvés' })
 			}
-
+		
 			return res.status(200).json({ result })
 		}
 	)

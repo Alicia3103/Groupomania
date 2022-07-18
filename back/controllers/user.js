@@ -26,18 +26,17 @@ exports.signup = (req, res, next) => {
 					[nom, prenom, email, hash],
 					function (err, result) {
 						if (err) {
-							console.log(err)
-							return res
-								.status(400)
-								.json({ error: 'creation de compte impossible' })
+							if(err.errno===1062){
+								return res.status(409).json({ error: 'email déjà utilisé' })
+							}
+							return res.status(400).json({ error: 'creation de compte impossible' })
 						}
 						res.status(201).json({ message: 'Utilisateur créé' })
 					}
 				)
 			})
 			.catch((error) => {
-				console.log(error)
-				return res.status(500).json({ error: 'problème hash' })
+				return res.status(400).json({ error: 'problème hash' })
 			})
 	})
 }
@@ -86,7 +85,6 @@ exports.getUser = (req, res, next) => {
 		[userId],
 		function (err, result) {
 			if (err) {
-				console.log(err)
 				return res.status(404).json({ error: 'aucun utilisateur trouvé' })
 			}
 
@@ -101,8 +99,11 @@ exports.unactiveAccount = (req, res) => {
 	const id = req.auth.userId // arriver a recuperer le userId
 
 	db.query('UPDATE user SET Actif=0 WHERE Id =?', [id], function (err, result) {
-		if (err || result.affectedRows === 0) {
+		if (err ) {
 			return res.status(404).json({ err: 'Utilisateur non trouvé' })
+		}
+		if(result.affectedRows === 0){
+			return res.status(400).json({ err: 'Impossible de désactiver le compte' })
 		}
 		res.status(200).json({ message: 'Compte désactivé !' })
 	})
