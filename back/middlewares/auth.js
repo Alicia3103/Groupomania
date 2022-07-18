@@ -15,13 +15,15 @@ module.exports = (req, res, next) => {
 		req.auth = { userId, isAdmin }
 		// s'il y a un userId et que ce dernier n'est pas le même que celui du header de la requete
 		if (req.body.userId && req.body.userId !== userId) {
-			throw 'Invalid user ID'
+			throw res.status(401).json({
+				error: 'userId Invalide',
+			})
 		} else {
 			next()
 		}
 	} catch {
-		res.status(401).json({
-			error: 'Invalid request!',
+		res.status(400).json({
+			error: 'Requête invalide!',
 		})
 	}
 }

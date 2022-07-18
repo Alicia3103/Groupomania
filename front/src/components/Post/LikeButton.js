@@ -15,7 +15,7 @@ function LikeButton(post) {
         setNbLike(response.data.result.length)
         setIsLiked(response.data.isLiked)
       } catch (err) {
-        console.error(err)
+        console.error(err.response.data.error)
       }
     }
 

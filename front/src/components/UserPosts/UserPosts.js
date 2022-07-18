@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import colors from '../../utils/styles/colors'
 
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
-import { useLocation, useNavigate } from 'react-router-dom'
 import Post from '../Post/Post'
 
 const UserPostsContainer = styled.div`
@@ -17,10 +16,11 @@ const UserPostsContainer = styled.div`
 `
 
 const UserPosts = () => {
+
+  const [errMsg, setErrMsg] = useState('')
   const [userPosts, setUserPosts] = useState()
   const axiosPrivate = useAxiosPrivate()
-  const navigate = useNavigate()
-  const location = useLocation()
+
 
   useEffect(() => {
     let isMounted = true
@@ -31,11 +31,12 @@ const UserPosts = () => {
         const response = await axiosPrivate.get('/api/post/byUser', {
           signal: controller.signal,
         })
-
+        if(!response.data.result.length){
+          setErrMsg('Pas de post à afficher')
+        }
         isMounted && setUserPosts(response.data.result)
       } catch (err) {
-        console.error(err)
-        navigate('/login', { state: { from: location }, replace: true })
+        setErrMsg(err.response.data.error)
       }
     }
 
@@ -57,7 +58,7 @@ const UserPosts = () => {
           ))}
         </div>
       ) : (
-        <p>No posts to display</p>
+        <p>{errMsg}</p>
       )}
     </UserPostsContainer>
   )

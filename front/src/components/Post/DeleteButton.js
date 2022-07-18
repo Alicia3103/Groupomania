@@ -7,10 +7,14 @@ function DeleteButton(post) {
   const postId = post.post.Id
 
   const handleDelete = () => {
-    axiosPrivate.delete(`api/post/${postId}`, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    })
+    try {
+      axiosPrivate.delete(`api/post/${postId}`, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+    } catch (err) {
+      console.error(err.response.data.error)
+    }
   }
 
   return (

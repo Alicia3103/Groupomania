@@ -20,16 +20,17 @@ exports.signup = (req, res, next) => {
 			.hash(req.body.password, salt)
 
 			.then((hash) => {
-				//ajouter les autres données de user (date is admin etc)
 				db.query(
 					'INSERT INTO user SET  Nom =?, Prenom =?, Email =?, Password= ?',
 					[nom, prenom, email, hash],
 					function (err, result) {
 						if (err) {
-							if(err.errno===1062){
+							if (err.errno === 1062) {
 								return res.status(409).json({ error: 'email déjà utilisé' })
 							}
-							return res.status(400).json({ error: 'creation de compte impossible' })
+							return res
+								.status(400)
+								.json({ error: 'creation de compte impossible' })
 						}
 						res.status(201).json({ message: 'Utilisateur créé' })
 					}
@@ -45,17 +46,16 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
 	const email = req.body.email
 	const password = req.body.password
-	//méthode 'select * from user where email=?' pour trouver l'utilisateur dont l'email correspond
 	db.query(
 		'SELECT Id,Actif,IsAdmin,Password FROM user WHERE Email =?',
 		[email],
 		function (err, result) {
 			if (err || !result.length) {
-				return res.status(404).json({ message: 'Utilisateur non trouvé' })
+				return res.status(404).json({ error: 'Utilisateur non trouvé' })
 			}
 			const user = result[0]
 			if (user.Actif === 0) {
-				return res.status(401).json({ message: 'Compte désactivé' })
+				return res.status(401).json({ error: 'Compte désactivé' })
 			}
 			bcrypt
 				.compare(password, user.Password)
@@ -81,30 +81,33 @@ exports.login = (req, res, next) => {
 exports.getUser = (req, res, next) => {
 	const userId = req.auth.userId
 	db.query(
-		'SELECT Nom,Prenom,Email FROM user WHERE Id =? ',
+		'SELECT Nom,Prenom,Email, Actif FROM user WHERE Id =? ',
 		[userId],
 		function (err, result) {
 			if (err) {
 				return res.status(404).json({ error: 'aucun utilisateur trouvé' })
+			} else if (result[0].Actif === 0) {
+				return res.status(403).json({ error: 'Compte désactivé' })
 			}
-
 			return res.status(200).json({ result })
 		}
 	)
 }
 
+//désactive son propre compte
 exports.unactiveAccount = (req, res) => {
-	//désactive son propre compte
+	const id = req.auth.userId
 
-	const id = req.auth.userId // arriver a recuperer le userId
-
-	db.query('UPDATE user SET Actif=0 WHERE Id =?', [id], function (err, result) {
-		if (err ) {
-			return res.status(404).json({ err: 'Utilisateur non trouvé' })
+	db.query(
+		'UPDATE user SET Actif=0 , UnactiveTime = CURRENT_TIMESTAMP WHERE Id =?',
+		[id],
+		function (err, result) {
+			if (err || result.affectedRows === 0) {
+				return res
+					.status(404)
+					.json({ error: 'Impossible de désactiver le compte' })
+			}
+			res.status(200).json({ message: 'Compte désactivé !' })
 		}
-		if(result.affectedRows === 0){
-			return res.status(400).json({ err: 'Impossible de désactiver le compte' })
-		}
-		res.status(200).json({ message: 'Compte désactivé !' })
-	})
+	)
 }

@@ -1,5 +1,6 @@
 const db = require('../database/DB')
 const fs = require('fs')
+
 //fonction création du post
 exports.createPost = (req, res, next) => {
 	const body = JSON.parse(req.body.post)
@@ -25,13 +26,13 @@ exports.createPost = (req, res, next) => {
 	)
 }
 
-//fonction supression du post  
+//fonction supression du post
 exports.deletePost = (req, res, next) => {
 	const id = req.params.id
 	db.query('SELECT * FROM post WHERE Id=?', [id], function (err, result) {
 		if (err || !result.length) {
-			return res.status(404).json({ message: 'Post non trouvé' })
-		} else if (req.auth.userId === result[0].UserId || req.auth.isAdmin===1) {
+			return res.status(404).json({ error: 'Post non trouvé' })
+		} else if (req.auth.userId === result[0].UserId || req.auth.isAdmin === 1) {
 			const imageUrl = result[0].ImageUrl
 			if (imageUrl) {
 				const filename = imageUrl.split('/images/')[1]
@@ -39,18 +40,19 @@ exports.deletePost = (req, res, next) => {
 			}
 			db.query('DELETE FROM post WHERE Id=?', [id], function (err, result) {
 				if (err) {
-					return res.status(404).json({ error: err })
+					return res
+						.status(400)
+						.json({ error: 'impossible de récupérer les données' })
 				}
 				return res.status(200).json({ message: 'Post supprimé' })
 			})
 		} else {
-			return res.status(403).json({ message: 'Vous ne pouvez pas supprimer ce post' })
+			return res
+				.status(403)
+				.json({ error: 'Vous ne pouvez pas supprimer ce post' })
 		}
 	})
 }
-// -------------------------------------------------------
-//terminer la gestion du formData et de l'image
-// -------------------------------------------------------
 
 //fonction modification de post
 exports.modifyPost = (req, res, next) => {
@@ -63,19 +65,24 @@ exports.modifyPost = (req, res, next) => {
 			return res.status(404).json({ error: 'Post non trouvé' })
 		}
 		if (req.auth.userId === result[0].UserId) {
-			let newImageUrl = ''
 			const oldImage = result[0].ImageUrl
+			let newImageUrl = oldImage
 
-			if (req.file)
+			if (req.file) {
 				newImageUrl =
 					req.protocol +
 					'://' +
 					req.headers.host +
 					'/images/' +
 					req.file.filename
+				if (oldImage) {
+					const filename = oldImage.split('/images/')[1]
+					fs.unlinkSync(`images/${filename}`)
+				}
+			}
+
 			const newTitle = body.title
 			const newContent = body.content
-
 			db.query(
 				'UPDATE post SET Title=?, Content=?, ImageUrl =? WHERE Id=?',
 				[newTitle, newContent, newImageUrl, id],
@@ -83,16 +90,15 @@ exports.modifyPost = (req, res, next) => {
 					if (err) {
 						return res.status(404).json({ error: 'Post non modifié' })
 					}
+
 					return res.status(200).json({ message: 'Post modifié' })
 				}
 			)
-
-			if (newImageUrl !== '' && oldImage) {
-				const filename = oldImage.split('/images/')[1]
-				fs.unlinkSync(`images/${filename}`)
-			}
+		} else {
+			return res
+				.status(403)
+				.json({ error: 'Vous ne pouvez pas modifier ce post' })
 		}
-		return res.status(403).json({ error: 'Vous ne pouvez pas modifier ce post' })
 	})
 }
 
@@ -102,8 +108,9 @@ exports.getAllPost = (req, res, next) => {
 		'SELECT * FROM post ORDER BY CreateTime DESC',
 		function (err, result) {
 			if (err) {
-				console.log(err)
-				return res.status(404).json({ error: 'aucun posts trouvés' })
+				return res
+					.status(404)
+					.json({ error: 'impossible de récupérer les données' })
 			}
 
 			return res.status(200).json({ result })
@@ -121,7 +128,9 @@ exports.getLikedPost = (req, res, next) => {
 		[postId],
 		function (err, result) {
 			if (err) {
-				return res.status(404).json({ error: 'err' })
+				return res
+					.status(400)
+					.json({ error: 'impossible de récupérer les données' })
 			}
 			if (result.length) {
 				let isLiked = false
@@ -148,7 +157,9 @@ exports.likePost = (req, res, next) => {
 		[userId, postId],
 		function (err, result) {
 			if (err) {
-				return res.status(400).json({ error: 'err' })
+				return res
+					.status(400)
+					.json({ error: 'impossible de récupérer les données' })
 			}
 			if (result.length) {
 				db.query(
@@ -156,7 +167,7 @@ exports.likePost = (req, res, next) => {
 					[userId, postId],
 					function (err, result) {
 						if (err) {
-							return res.status(404).json({ error: 'Like non supprimé' })
+							return res.status(400).json({ error: 'Like non supprimé' })
 						}
 						return res.status(200).json({ message: 'Like supprimé-1' })
 					}
@@ -188,9 +199,11 @@ exports.getAllUserPost = (req, res, next) => {
 		[userId],
 		function (err, result) {
 			if (err) {
-				return res.status(404).json({ error: 'aucun posts trouvés' })
+				return res
+					.status(404)
+					.json({ error: 'impossible de récupérer les données' })
 			}
-		
+
 			return res.status(200).json({ result })
 		}
 	)

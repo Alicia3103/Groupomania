@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useAuth from '../../hooks/useAuth'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
@@ -16,7 +16,7 @@ const UserInfo = () => {
   const [errMsg, setErrMsg] = useState('')
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
-  const location = useLocation()
+  
 
   useEffect(() => {
     let isMounted = true
@@ -31,8 +31,7 @@ const UserInfo = () => {
 
         isMounted && setUser(response.data.result[0])
       } catch (err) {
-        console.error(err)
-        navigate('/login', { state: { from: location }, replace: true })
+        setErrMsg(err.response.data.error)
       }
     }
 
@@ -62,12 +61,8 @@ const UserInfo = () => {
     } catch (err) {
       if (!err?.response) {
         setErrMsg('Pas de réponse Serveur')
-      } else if (err.response?.status === 401) {
-        setErrMsg('Vous ne possédez pas ce compte')
-      } else if (err.response?.status === 404) {
-        setErrMsg('Utilisateur non trouvé')
       } else {
-        setErrMsg('La désactivation a echouée')
+        setErrMsg(err.response.data.error)
       }
     }
   }
@@ -79,6 +74,7 @@ const UserInfo = () => {
           {user?.Nom} {user?.Prenom}
         </p>
         <p className="mail">{user?.Email}</p>
+        <p>{errMsg}</p>
       </div>
       <button onClick={handleClick} className="desactiverCompte">
         Désactiver le compte
