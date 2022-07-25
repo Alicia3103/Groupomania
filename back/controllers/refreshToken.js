@@ -5,34 +5,33 @@ dotenv.config()
 
 
 exports.refreshedToken = (req, res) => {
-  console.log('refreshedToken ')
 
-  console.log('authHeaderRefresh',req.headers['authorization'])
-      const authHeader=req.headers['authorization']
-      //Récupération du tokken contenu dans le header (split et récupération de la 2e valeur)
-      const headerToken = authHeader && authHeader.split(' ')[1]
-      console.log('headerRefreshToken',headerToken)
-      if(!headerToken){
-        return res.status(401).json({error:'aucun token'})
+  console.log('refreshcookies',req.cookies.refreshToken)
+
+      const refreshToken = req.cookies.refreshToken
+      console.log('RefreshToken',refreshToken)
+      if(!refreshToken){
+        return res.status(401).json({error:'aucun refreshToken'})
       }
 	//Vérification du token
-  jwt.verify(headerToken, process.env.REFRESH_SECRET_TOKEN,(err,user)=>{
+  jwt.verify(refreshToken, process.env.REFRESH_SECRET_TOKEN,(err,user)=>{
 		if(err){
-			return res.status(401).json({error:'mauvais refreshToken'})
+			return res.status(401).json({error:'refreshToken invalide'})
 		}
 		delete user.iat
 		delete user.exp
 		console.log('user')
 		console.log(user)
+    
     const accessToken=jwt.sign(
-      { userId: user.userId, isAdmin: user.IsAdmin },
+      { userId: user.userId, isAdmin: user.isAdmin },
       process.env.SECRET_TOKEN,
-      { expiresIn: '10s' }
+      { expiresIn: '1800s' }
     )
 		
     return res.status(200).json({
 			userId: user.userId,
-			isAdmin: user.IsAdmin,
+			isAdmin: user.isAdmin,
 			//encodage avec la fonction 'sign'
 			token: accessToken
 		})

@@ -1,6 +1,5 @@
-
 const express = require('express')
-
+const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const helmet = require('helmet')
 const path = require('path')
@@ -26,6 +25,7 @@ app.use(
 		optionsSuccessStatus: 200,
 	})
 )
+app.use(cookieParser())
 
 app.use(express.json())
 
@@ -34,6 +34,6 @@ const refreshCtrl = require('./controllers/refreshToken')
 //utilisation des routes
 app.use('/api/post', postRoutes)
 app.use('/api/auth', userRoutes)
-app.post('/api/refreshToken',refreshCtrl.refreshedToken)
+app.get('/api/refreshToken', refreshCtrl.refreshedToken)
 
 module.exports = app

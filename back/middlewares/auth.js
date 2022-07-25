@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 module.exports = (req, res, next) => {
 console.log('auth')
 
-console.log('authHeader',req.headers)
+
 		const authHeader=req.headers['authorization']
 		//Récupération du tokken contenu dans le header (split et récupération de la 2e valeur)
 		const headerToken = authHeader && authHeader.split(' ')[1]

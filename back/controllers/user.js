@@ -44,7 +44,6 @@ exports.signup = (req, res, next) => {
 
 //fonction login
 exports.login = (req, res, next) => {
-	
 	const email = req.body.email
 	const password = req.body.password
 	db.query(
@@ -64,6 +63,15 @@ exports.login = (req, res, next) => {
 					if (!valid) {
 						return res.status(409).json({ message: 'Mot de passe incorrect !' })
 					}
+					const refreshToken = jwt.sign(
+						{ userId: user.Id, isAdmin: user.IsAdmin },
+						process.env.REFRESH_SECRET_TOKEN,
+						{ expiresIn: '24h' }
+					)
+					res.cookie('refreshToken', refreshToken, {
+						httpOnly: true,
+						maxAge: 24 * 60 * 60 * 1000,
+					})
 					return res.status(200).json({
 						userId: user.Id,
 						isAdmin: user.IsAdmin,
@@ -71,13 +79,8 @@ exports.login = (req, res, next) => {
 						token: jwt.sign(
 							{ userId: user.Id, isAdmin: user.IsAdmin },
 							secretToken,
-							{ expiresIn: '10s' }
+							{ expiresIn: '1800s' }
 						),
-						refreshToken:jwt.sign(
-							{ userId: user.Id, isAdmin: user.IsAdmin },
-							process.env.REFRESH_SECRET_TOKEN,
-							{ expiresIn: '24h' }
-						)
 					})
 				})
 				.catch((error) => res.status(500).json({ error }))
