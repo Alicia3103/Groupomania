@@ -1,29 +1,29 @@
 const jwt = require('jsonwebtoken')
 
 module.exports = (req, res, next) => {
-	try {
+console.log('auth')
+
+console.log('authHeader',req.headers)
+		const authHeader=req.headers['authorization']
 		//Récupération du tokken contenu dans le header (split et récupération de la 2e valeur)
-		const headerToken = req.headers.authorization.split(' ')[1]
-
+		const headerToken = authHeader && authHeader.split(' ')[1]
+		console.log('headreToken',headerToken)
+		if(!headerToken){
+			return res.status(401).json({error:'aucun token'})
+		}
 		//Vérification du token
-		const decodedToken = jwt.verify(headerToken, process.env.SECRET_TOKEN)
-
-		const userId = decodedToken.userId
-		const isAdmin = decodedToken.isAdmin
-
+		jwt.verify(headerToken, process.env.SECRET_TOKEN,(err,user)=>{
+			console.log('here')
+			if(err){
+				console.log('erreur')
+				return res.sendStatus(401)
+			}
+		console.log('pas derreur')
+		const userId = user.userId
+		const isAdmin = user.isAdmin
 		//ajout de l'userId lors d'une requete delete (pour comparaison plus tard)
 		req.auth = { userId, isAdmin }
-		// s'il y a un userId et que ce dernier n'est pas le même que celui du header de la requete
-		if (req.body.userId && req.body.userId !== userId) {
-			throw res.status(401).json({
-				error: 'userId Invalide',
-			})
-		} else {
-			next()
-		}
-	} catch {
-		res.status(400).json({
-			error: 'Requête invalide!',
+		next()
 		})
-	}
+
 }

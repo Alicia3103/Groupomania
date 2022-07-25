@@ -1,3 +1,4 @@
+
 const express = require('express')
 
 const cors = require('cors')
@@ -29,9 +30,10 @@ app.use(
 app.use(express.json())
 
 app.use('/images', express.static(path.join(__dirname, 'images')))
-
+const refreshCtrl = require('./controllers/refreshToken')
 //utilisation des routes
 app.use('/api/post', postRoutes)
 app.use('/api/auth', userRoutes)
+app.post('/api/refreshToken',refreshCtrl.refreshedToken)
 
 module.exports = app

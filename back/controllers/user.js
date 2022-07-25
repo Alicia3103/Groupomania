@@ -44,6 +44,7 @@ exports.signup = (req, res, next) => {
 
 //fonction login
 exports.login = (req, res, next) => {
+	
 	const email = req.body.email
 	const password = req.body.password
 	db.query(
@@ -70,8 +71,13 @@ exports.login = (req, res, next) => {
 						token: jwt.sign(
 							{ userId: user.Id, isAdmin: user.IsAdmin },
 							secretToken,
-							{ expiresIn: '24H' }
+							{ expiresIn: '10s' }
 						),
+						refreshToken:jwt.sign(
+							{ userId: user.Id, isAdmin: user.IsAdmin },
+							process.env.REFRESH_SECRET_TOKEN,
+							{ expiresIn: '24h' }
+						)
 					})
 				})
 				.catch((error) => res.status(500).json({ error }))

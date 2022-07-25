@@ -104,6 +104,7 @@ exports.modifyPost = (req, res, next) => {
 
 // fonction affichage de tous les posts
 exports.getAllPost = (req, res, next) => {
+	console.log(req.auth)
 	db.query(
 		'SELECT * FROM post ORDER BY CreateTime DESC',
 		function (err, result) {
