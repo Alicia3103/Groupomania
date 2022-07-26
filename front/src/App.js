@@ -7,6 +7,7 @@ import Home from './pages/Home'
 
 import User from './pages/User'
 import RequireAuth from './components/RequireAuth/RequireAuth'
+import PersistLogin from './components/PersistLogin'
 import Layout from './components/Layout'
 import LogOut from './pages/LogOut'
 
@@ -27,9 +28,12 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/connexion" element={<Connexion />} />
-          <Route element={<RequireAuth />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/user" element={<User />} />
+
+          <Route path="/" element={<PersistLogin />}>
+            <Route element={<RequireAuth />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/user" element={<User />} />
+            </Route>
           </Route>
           <Route path="/logout" element={<LogOut />} />
           <Route path="*" element={<Connexion />} />

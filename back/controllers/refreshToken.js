@@ -26,7 +26,7 @@ exports.refreshedToken = (req, res) => {
     const accessToken=jwt.sign(
       { userId: user.userId, isAdmin: user.isAdmin },
       process.env.SECRET_TOKEN,
-      { expiresIn: '1800s' }
+      { expiresIn: '10s' }
     )
 		
     return res.status(200).json({

@@ -73,9 +73,9 @@ const LoginForm = () => {
       const accessToken = response?.data?.token
       const userId = response?.data?.userId
       const isAdmin = response?.data?.isAdmin
-      const refreshToken = response?.data?.refreshToken
+      
 
-      setAuth({ userId, accessToken, isAdmin,refreshToken })
+      setAuth({ userId, accessToken, isAdmin })
       setEmail('')
       setPassword('')
 

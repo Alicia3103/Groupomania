@@ -32,11 +32,12 @@ const useAxiosPrivate = () => {
           originalRequest._retry = true
 
           console.log('refresh token')
-          await axios
+          const response=await axios
             .get('/api/refreshToken', {
               withCredentials: true,
             })
-            .then((response) => {
+            console.log('rezponse',response)
+            
               const accessToken = response.data.token
 
               setAuth({
@@ -47,10 +48,8 @@ const useAxiosPrivate = () => {
               })
               console.log('response', response)
               originalRequest.headers['authorization'] = `Bearer ${accessToken}`
-            })
-            .catch((error) => {
-              return error
-            })
+            
+            
           return axiosPrivate(originalRequest)
         }
         Promise.reject(error)
