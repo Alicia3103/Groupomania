@@ -8,6 +8,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
 import colors from '../../utils/styles/colors'
+import useLogout from '../../hooks/useLogout'
 
 const NavComponent = styled.div`
 width:23%;
@@ -39,6 +40,10 @@ const NavIcon = styled.li`
 `
 
 const Navigation = () => {
+  const logout= useLogout()
+  const logOut =async()=>{
+    await logout()
+  }
   return (
     <NavComponent>
       <NavList>
@@ -54,7 +59,7 @@ const Navigation = () => {
         </NavLink>
         <NavLink to="/logout">
           <NavIcon>
-            <FontAwesomeIcon icon={faRightFromBracket}></FontAwesomeIcon>
+            <FontAwesomeIcon onClick={logOut} icon={faRightFromBracket}></FontAwesomeIcon>
           </NavIcon>
         </NavLink>
       </NavList>

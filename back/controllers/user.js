@@ -70,6 +70,8 @@ exports.login = (req, res, next) => {
 					)
 					res.cookie('refreshToken', refreshToken, {
 						httpOnly: true,
+						samesite:'None',
+						secure:true,
 						maxAge: 24 * 60 * 60 * 1000,
 					})
 					return res.status(200).json({
@@ -87,6 +89,16 @@ exports.login = (req, res, next) => {
 		}
 	)
 }
+
+//fonction logout
+exports.logout = (req, res, next) => {
+	const cookies=req.cookies
+	if(!cookies?.refreshToken) return res.status(204).json({message:'Pas de cookies'})
+	res.clearCookie('refreshToken',{ httpOnly:true,samesite:'None',secure:true})
+	return res.status(204).json({message:'cookies supprimés'})
+}
+
+
 exports.getUser = (req, res, next) => {
 	const userId = req.auth.userId
 	db.query(

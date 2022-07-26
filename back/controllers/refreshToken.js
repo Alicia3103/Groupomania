@@ -13,6 +13,8 @@ exports.refreshedToken = (req, res) => {
       if(!refreshToken){
         return res.status(401).json({error:'aucun refreshToken'})
       }
+
+			
 	//Vérification du token
   jwt.verify(refreshToken, process.env.REFRESH_SECRET_TOKEN,(err,user)=>{
 		if(err){

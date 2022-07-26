@@ -6,6 +6,8 @@ import colors from '../utils/styles/colors'
 import backgroundImage from './groupomaniafond.jpg'
 import useAuth from '../hooks/useAuth'
 import { Link } from 'react-router-dom'
+import axios from '../api/axios'
+import useLogout from '../hooks/useLogout'
 
 const LogOutPage = styled.section`
   display: flex;
@@ -37,15 +39,7 @@ const Connect = styled.div`
 `
 
 const LogOut = () => {
-  const { setAuth } = useAuth()
-  useEffect(() => {
-    try {
-      setAuth({ userId: '', accessToken: '', isAdmin: '' })
-    } catch (err) {
-      console.log(err)
-    }
-    // eslint-disable-next-line
-  }, [])
+  
 
   return (
     <LogOutPage>
