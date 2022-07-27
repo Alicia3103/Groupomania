@@ -65,9 +65,19 @@ exports.modifyPost = (req, res, next) => {
 			return res.status(404).json({ error: 'Post non trouvé' })
 		}
 		if (req.auth.userId === result[0].UserId) {
+			console.log('file', body)
+
 			const oldImage = result[0].ImageUrl
 			let newImageUrl = oldImage
 
+			if (body.deleteImage === true) {
+				newImageUrl = ''
+		
+				if (oldImage) {
+					const filename = oldImage.split('/images/')[1]
+					fs.unlinkSync(`images/${filename}`)
+				}
+			}
 			if (req.file) {
 				newImageUrl =
 					req.protocol +
@@ -75,12 +85,12 @@ exports.modifyPost = (req, res, next) => {
 					req.headers.host +
 					'/images/' +
 					req.file.filename
+					
 				if (oldImage) {
 					const filename = oldImage.split('/images/')[1]
 					fs.unlinkSync(`images/${filename}`)
 				}
 			}
-
 			const newTitle = body.title
 			const newContent = body.content
 			db.query(

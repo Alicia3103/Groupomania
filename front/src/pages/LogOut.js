@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Header from '../components/Header/Header'
 
 import styled from 'styled-components'
 import colors from '../utils/styles/colors'
 import backgroundImage from './groupomaniafond.jpg'
-import useAuth from '../hooks/useAuth'
+
 import { Link } from 'react-router-dom'
-import axios from '../api/axios'
-import useLogout from '../hooks/useLogout'
+
 
 const LogOutPage = styled.section`
   display: flex;

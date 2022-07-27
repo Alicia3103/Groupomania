@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useAuth from '../../hooks/useAuth'
 import LikeButton from './LikeButton'
 import ModifyButton from './ModifyButton'
@@ -21,25 +21,46 @@ function Post({ post }) {
   const postTitle = post.Title
   const postContent = post.Content
   const postImageUrl = post.ImageUrl
+  const fileInputRef = useRef()
+  const [preview, setPreview] = useState('')
 
   const [editingTitle, setEditingTitle] = useState(postTitle)
   const [editingContent, setEditingContent] = useState(postContent)
   const [editingSelectedFile, setEditingSelectedFile] = useState()
+  const [deleteImage,setDeleteImage]=useState(false)
 
   const [isEditing, setIsEditing] = useState(false)
+  useEffect(() => {
+    if (isEditing && postImageUrl) console.log('postImageUrl', postImageUrl)
+    setPreview(postImageUrl)
+  }, [isEditing, postImageUrl])
+
+  useEffect(() => {
+    if (editingSelectedFile) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        setPreview(reader.result)
+      }
+      reader.readAsDataURL(editingSelectedFile)
+    } else {
+      setPreview(null)
+    }
+  }, [editingSelectedFile])
 
   const handleEdit = (e) => {
     e.preventDefault()
     setIsEditing(false)
+    console.log('deleteImage',deleteImage)
     const editPost = {
       title: editingTitle,
       content: editingContent,
       id: postId,
+      deleteImage:deleteImage
     }
     const editPostData = new FormData()
 
     editPostData.set('post', JSON.stringify(editPost))
-
+    
     editPostData.append('image', editingSelectedFile)
 
     try {
@@ -98,9 +119,35 @@ function Post({ post }) {
               defaultValue={postContent}
               onChange={(e) => setEditingContent(e.target.value)}
             />
+            {preview ? (
+              <div><img
+                alt={'preview'}
+                src={preview}
+                style={{ height: '150px' }}
+                
+              />
+              <button onClick={() => {
+                setDeleteImage(true)
+                  setPreview('')
+                }}
+              >supprimer l'image</button>
+              </div>
+            ) : (
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  setDeleteImage(false)
+                  fileInputRef.current.click()
+                }}
+              >
+                Add image
+              </button>
+            )}
             <input
               type="file"
               accept=".jpg, .jpeg, .png"
+              style={{ display: 'none' }}
+              ref={fileInputRef}
               onChange={(e) => setEditingSelectedFile(e.target.files[0])}
             />
             <input type="submit" value="Envoyer" />

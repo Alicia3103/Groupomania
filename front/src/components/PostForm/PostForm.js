@@ -1,15 +1,28 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { axiosPrivate } from '../../api/axios'
 
 const POST_URL = 'api/post'
 function PostForm() {
+  const fileInputRef = useRef()
+  const [preview,setPreview]=useState('')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [selectedFile, setSelectedFile] = useState()
+  
 
   const post = { title, content }
   const postData = new FormData()
-
+useEffect(()=>{
+  if(selectedFile){
+    const reader =new FileReader()
+    reader.onload=()=>{
+      setPreview(reader.result)
+    }
+    reader.readAsDataURL(selectedFile)
+  }else{
+    setPreview(null)
+  }
+},[selectedFile])
   const handleSubmit = async (e) => {
     e.preventDefault()
     postData.set('post', JSON.stringify(post))
@@ -31,6 +44,7 @@ function PostForm() {
 
   return (
     <div>
+      
       <form onSubmit={handleSubmit}>
         <label htmlFor="title">Titre</label>
         <input
@@ -47,10 +61,18 @@ function PostForm() {
           required
           onChange={(e) => setContent(e.target.value)}
         />
+        {preview?<img alt={'preview'} src={preview} onClick={()=>{setSelectedFile()
+      setPreview('')}}/>:
+        <button onClick={(e)=>{
+          e.preventDefault()
+          fileInputRef.current.click()
+        }}>Add image</button>}
         <input
           type="file"
           accept=".jpg, .jpeg, .png"
+          style={{display:"none"}}
           onChange={(e) => setSelectedFile(e.target.files[0])}
+          ref={fileInputRef}
         />
         {/* faPaperplane */}
         <input className="send" type="submit" value="Envoyer" />
