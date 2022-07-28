@@ -61,8 +61,12 @@ useEffect(()=>{
           required
           onChange={(e) => setContent(e.target.value)}
         />
-        {preview?<img alt={'preview'} src={preview} onClick={()=>{setSelectedFile()
-      setPreview('')}}/>:
+        {preview?<div><img alt={'preview'} style={{height: 100}}src={preview} onClick={(e)=>{ e.preventDefault()
+          fileInputRef.current.click()}}/><button onClick={() => {
+        setSelectedFile()
+          setPreview('')
+        }}
+      >supprimer l'image</button></div>:
         <button onClick={(e)=>{
           e.preventDefault()
           fileInputRef.current.click()

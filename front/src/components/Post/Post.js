@@ -120,12 +120,11 @@ function Post({ post }) {
               onChange={(e) => setEditingContent(e.target.value)}
             />
             {preview ? (
-              <div><img
-                alt={'preview'}
-                src={preview}
-                style={{ height: '150px' }}
-                
-              />
+              <div><img alt={'preview'} style={{height: '150px'}}src={preview} 
+              onClick={(e)=>{ 
+                e.preventDefault()
+                setDeleteImage(false)
+                fileInputRef.current.click()}}/>
               <button onClick={() => {
                 setDeleteImage(true)
                   setPreview('')
