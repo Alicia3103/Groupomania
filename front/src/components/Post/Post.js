@@ -5,29 +5,31 @@ import LikeButton from './LikeButton'
 import ModifyButton from './ModifyButton'
 import DeleteButton from './DeleteButton'
 import { axiosPrivate } from '../../api/axios'
+import usePosts from '../../hooks/usePosts'
 
 const Image = styled.img`
   width: 60%;
 `
 
-function Post({ post }) {
+function Post({ post, index }) {
   const { auth } = useAuth()
-
+  const [posts, setPosts] = usePosts()
   const { userId } = auth
-  const postUserId = post.UserId
+  console.log(posts[index])
+  const postUserId = posts[index].UserId
   const { isAdmin } = auth
 
-  const postId = post.Id
-  const postTitle = post.Title
-  const postContent = post.Content
-  const postImageUrl = post.ImageUrl
+  const postId = posts[index].Id
+  const postTitle = posts[index].Title
+  const postContent = posts[index].Content
+  const postImageUrl = posts[index].ImageUrl
   const fileInputRef = useRef()
   const [preview, setPreview] = useState('')
 
   const [editingTitle, setEditingTitle] = useState(postTitle)
   const [editingContent, setEditingContent] = useState(postContent)
   const [editingSelectedFile, setEditingSelectedFile] = useState()
-  const [deleteImage,setDeleteImage]=useState(false)
+  const [deleteImage, setDeleteImage] = useState(false)
 
   const [isEditing, setIsEditing] = useState(false)
   useEffect(() => {
@@ -50,17 +52,17 @@ function Post({ post }) {
   const handleEdit = (e) => {
     e.preventDefault()
     setIsEditing(false)
-    console.log('deleteImage',deleteImage)
+    console.log('deleteImage', deleteImage)
     const editPost = {
       title: editingTitle,
       content: editingContent,
       id: postId,
-      deleteImage:deleteImage
+      deleteImage: deleteImage,
     }
     const editPostData = new FormData()
 
     editPostData.set('post', JSON.stringify(editPost))
-    
+
     editPostData.append('image', editingSelectedFile)
 
     try {
@@ -82,30 +84,32 @@ function Post({ post }) {
   return (
     <div>
       {!isEditing ? (
-        <div className="post" id={post.Id}>
+        <div className="post" id={posts[index].Id}>
           <h2>{postTitle}</h2>
           {postImageUrl ? (
             <Image
               src={postImageUrl}
               className="post-img"
-              id={post.Id}
+              id={posts[index].Id}
               alt="img-post"
             />
           ) : null}
           <p>{postContent}</p>
           <div className="author">
-            <h5>{post.UserId}</h5>
+            <h5>
+              {posts[index].Nom} {posts[index].Prenom}
+            </h5>
           </div>
           <div onClick={() => setIsEditing(true)}>
             {userId === postUserId ? <ModifyButton /> : null}
           </div>
           <div>
             {userId === postUserId || isAdmin === 1 ? (
-              <DeleteButton post={post} />
+              <DeleteButton index={index} />
             ) : null}
           </div>
           <div>
-            <LikeButton post={post} />
+            <LikeButton index={index} />
           </div>
         </div>
       ) : (
@@ -120,16 +124,25 @@ function Post({ post }) {
               onChange={(e) => setEditingContent(e.target.value)}
             />
             {preview ? (
-              <div><img alt={'preview'} style={{height: '150px'}}src={preview} 
-              onClick={(e)=>{ 
-                e.preventDefault()
-                setDeleteImage(false)
-                fileInputRef.current.click()}}/>
-              <button onClick={() => {
-                setDeleteImage(true)
-                  setPreview('')
-                }}
-              >supprimer l'image</button>
+              <div>
+                <img
+                  alt={'preview'}
+                  style={{ height: '150px' }}
+                  src={preview}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setDeleteImage(false)
+                    fileInputRef.current.click()
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    setDeleteImage(true)
+                    setPreview('')
+                  }}
+                >
+                  supprimer l'image
+                </button>
               </div>
             ) : (
               <button

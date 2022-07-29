@@ -2,10 +2,12 @@ import React from 'react'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { axiosPrivate } from '../../api/axios'
+import usePosts from '../../hooks/usePosts'
 
-function DeleteButton(post) {
-  const postId = post.post.Id
-
+function DeleteButton({index}) {
+  const [posts]=usePosts()
+ 
+  const postId = posts[index].Id
   const handleDelete = () => {
     try {
       axiosPrivate.delete(`api/post/${postId}`, {

@@ -18,7 +18,7 @@ const UserPostsContainer = styled.div`
 const UserPosts = () => {
 
   const [errMsg, setErrMsg] = useState('')
-  const [userPosts, setUserPosts] = useState()
+  const [posts, setPosts] = useState()
   const axiosPrivate = useAxiosPrivate()
 
 
@@ -34,9 +34,9 @@ const UserPosts = () => {
         if(!response.data.result.length){
           setErrMsg('Pas de post à afficher')
         }
-        isMounted && setUserPosts(response.data.result)
+        isMounted && setPosts(response.data.result)
       } catch (err) {
-        setErrMsg(err.response.data.error)
+        setErrMsg(err)
       }
     }
 
@@ -51,10 +51,10 @@ const UserPosts = () => {
 
   return (
     <UserPostsContainer>
-      {userPosts?.length ? (
+      {posts?.length ? (
         <div>
-          {userPosts.map((post) => (
-            <Post post={post} key={post.Id} />
+          {posts.map((post,index) => (
+            <Post post={post} index ={index} key={index} />
           ))}
         </div>
       ) : (

@@ -116,7 +116,7 @@ exports.modifyPost = (req, res, next) => {
 exports.getAllPost = (req, res, next) => {
 	console.log(req.auth)
 	db.query(
-		'SELECT * FROM post ORDER BY CreateTime DESC',
+		'SELECT post.Id,Title,Content,ImageUrl,CreateTime,UserId, user.Nom,user.Prenom FROM post LEFT JOIN user On post.UserId=user.Id ORDER BY CreateTime DESC',
 		function (err, result) {
 			if (err) {
 				return res

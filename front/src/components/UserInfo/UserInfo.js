@@ -31,7 +31,7 @@ const UserInfo = () => {
 
         isMounted && setUser(response.data.result[0])
       } catch (err) {
-        setErrMsg(err.response.data.error)
+        setErrMsg(err)
       }
     }
 

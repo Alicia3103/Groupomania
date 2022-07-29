@@ -7,9 +7,11 @@ import { PostsProvider } from './context/PostsProvider'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
-  <AuthProvider>
-       <PostsProvider>
-    <App />
-    </PostsProvider>
-  </AuthProvider>
+
+    <AuthProvider>
+      <PostsProvider>
+        <App />
+      </PostsProvider>
+    </AuthProvider>
+ 
 )
