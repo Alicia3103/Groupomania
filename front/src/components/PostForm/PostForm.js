@@ -1,28 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { axiosPrivate } from '../../api/axios'
+import { addPosts, getReduxPosts } from '../../store/PostsReducer'
 
 const POST_URL = 'api/post'
 function PostForm() {
   const fileInputRef = useRef()
-  const [preview,setPreview]=useState('')
+  const [preview, setPreview] = useState('')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [selectedFile, setSelectedFile] = useState()
-  
+  const dispatch = useDispatch()
 
   const post = { title, content }
   const postData = new FormData()
-useEffect(()=>{
-  if(selectedFile){
-    const reader =new FileReader()
-    reader.onload=()=>{
-      setPreview(reader.result)
+  useEffect(() => {
+    if (selectedFile) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        setPreview(reader.result)
+      }
+      reader.readAsDataURL(selectedFile)
+    } else {
+      setPreview(null)
     }
-    reader.readAsDataURL(selectedFile)
-  }else{
-    setPreview(null)
-  }
-},[selectedFile])
+  }, [selectedFile])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     postData.set('post', JSON.stringify(post))
@@ -30,13 +33,12 @@ useEffect(()=>{
     postData.append('image', selectedFile)
 
     try {
-      await axiosPrivate.post(POST_URL, postData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true,
-      })
+      await dispatch(addPosts(postData))
       setTitle('')
       setContent('')
       setSelectedFile()
+
+      dispatch(getReduxPosts())
     } catch (err) {
       console.log(err)
     }
@@ -44,7 +46,6 @@ useEffect(()=>{
 
   return (
     <div>
-      
       <form onSubmit={handleSubmit}>
         <label htmlFor="title">Titre</label>
         <input
@@ -61,20 +62,40 @@ useEffect(()=>{
           required
           onChange={(e) => setContent(e.target.value)}
         />
-        {preview?<div><img alt={'preview'} style={{height: 100}}src={preview} onClick={(e)=>{ e.preventDefault()
-          fileInputRef.current.click()}}/><button onClick={() => {
-        setSelectedFile()
-          setPreview('')
-        }}
-      >supprimer l'image</button></div>:
-        <button onClick={(e)=>{
-          e.preventDefault()
-          fileInputRef.current.click()
-        }}>Add image</button>}
+        {preview ? (
+          <div>
+            <img
+              alt={'preview'}
+              style={{ height: 100 }}
+              src={preview}
+              onClick={(e) => {
+                e.preventDefault()
+                fileInputRef.current.click()
+              }}
+            />
+            <button
+              onClick={() => {
+                setSelectedFile()
+                setPreview('')
+              }}
+            >
+              supprimer l'image
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              fileInputRef.current.click()
+            }}
+          >
+            Add image
+          </button>
+        )}
         <input
           type="file"
           accept=".jpg, .jpeg, .png"
-          style={{display:"none"}}
+          style={{ display: 'none' }}
           onChange={(e) => setSelectedFile(e.target.files[0])}
           ref={fileInputRef}
         />

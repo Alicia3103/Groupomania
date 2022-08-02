@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
+
 import styled from 'styled-components'
-import colors from '../../utils/styles/colors'
 
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
-import Post from '../Post/Post'
+import colors from '../../utils/styles/colors'
 
-const UserPostsContainer = styled.div`
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserPosts } from '../../store/PostsReducer'
+import TestPost from '../Post/Post'
+
+const UserPostsContainers = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -15,53 +19,43 @@ const UserPostsContainer = styled.div`
   border-radius: 10px;
 `
 
-const UserPosts = () => {
-
+const AllUserPostsContainer = () => {
   const [errMsg, setErrMsg] = useState('')
-  const [posts, setPosts] = useState()
+
+  const [loadPost, setLoadPost] = useState(true)
+  const userPosts = useSelector((state) => state.posts)
+  const dispatch = useDispatch()
   const axiosPrivate = useAxiosPrivate()
 
+  const isEmpty = (value) => {
+    return (
+      value === undefined ||
+      value === null ||
+      (typeof value === 'object' && Object.keys(value).length === 0) ||
+      (typeof value === 'string' && value.trim().length === 0)
+    )
+  }
 
   useEffect(() => {
-    let isMounted = true
-    const controller = new AbortController()
-
-    const getPosts = async () => {
-      try {
-        const response = await axiosPrivate.get('/api/post/byUser', {
-          signal: controller.signal,
-        })
-        if(!response.data.result.length){
-          setErrMsg('Pas de post à afficher')
-        }
-        isMounted && setPosts(response.data.result)
-      } catch (err) {
-        setErrMsg(err)
-      }
+    if (loadPost) {
+      dispatch(getUserPosts())
+      setLoadPost(false)
     }
-
-    getPosts()
-
-    return () => {
-      isMounted = false
-      controller.abort()
-    }
-    // eslint-disable-next-line
-  }, [])
+  }, [dispatch, loadPost])
 
   return (
-    <UserPostsContainer>
-      {posts?.length ? (
+    <UserPostsContainers>
+      {!isEmpty(userPosts[0]) ? (
         <div>
-          {posts.map((post,index) => (
-            <Post post={post} index ={index} key={index} />
+          {userPosts.map((post, index) => (
+            <TestPost post={post} index={index} key={index} />
           ))}
         </div>
       ) : (
         <p>{errMsg}</p>
       )}
-    </UserPostsContainer>
+    </UserPostsContainers>
   )
 }
 
-export default UserPosts
+export default AllUserPostsContainer

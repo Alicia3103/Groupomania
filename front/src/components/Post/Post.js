@@ -4,25 +4,28 @@ import useAuth from '../../hooks/useAuth'
 import LikeButton from './LikeButton'
 import ModifyButton from './ModifyButton'
 import DeleteButton from './DeleteButton'
-import { axiosPrivate } from '../../api/axios'
-import usePosts from '../../hooks/usePosts'
+
+
+import { useDispatch, useSelector } from 'react-redux'
+import { modifyPost } from '../../store/PostsReducer'
 
 const Image = styled.img`
   width: 60%;
 `
 
-function Post({ post, index }) {
+function TestPost({ index }) {
   const { auth } = useAuth()
-  const [posts, setPosts] = usePosts()
-  const { userId } = auth
-  console.log(posts[index])
-  const postUserId = posts[index].UserId
-  const { isAdmin } = auth
 
-  const postId = posts[index].Id
-  const postTitle = posts[index].Title
-  const postContent = posts[index].Content
-  const postImageUrl = posts[index].ImageUrl
+  const reduxPosts = useSelector((state) => state.posts)
+  const userId = auth.userId
+  const post = reduxPosts[index]
+  const postUserId = post.UserId
+  const { isAdmin } = auth.isAdmin
+  const dispatch = useDispatch()
+  const postId = post.Id
+  const postTitle = post.Title
+  const postContent = post.Content
+  const postImageUrl = post.ImageUrl
   const fileInputRef = useRef()
   const [preview, setPreview] = useState('')
 
@@ -49,7 +52,7 @@ function Post({ post, index }) {
     }
   }, [editingSelectedFile])
 
-  const handleEdit = (e) => {
+  const handleEdit = async (e) => {
     e.preventDefault()
     setIsEditing(false)
     console.log('deleteImage', deleteImage)
@@ -66,16 +69,12 @@ function Post({ post, index }) {
     editPostData.append('image', editingSelectedFile)
 
     try {
-      axiosPrivate
-        .put(`api/post/${postId}`, editPostData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          withCredentials: true,
-        })
-        .then(() => {
-          setEditingTitle('')
-          setEditingContent('')
-          setEditingSelectedFile()
-        })
+      console.log(editPost)
+      await dispatch(modifyPost(editPost, editPostData, postId))
+
+      setEditingTitle('')
+      setEditingContent('')
+      setEditingSelectedFile()
     } catch (err) {
       console.log(err)
     }
@@ -84,20 +83,20 @@ function Post({ post, index }) {
   return (
     <div>
       {!isEditing ? (
-        <div className="post" id={posts[index].Id}>
+        <div className="post" id={post.Id}>
           <h2>{postTitle}</h2>
           {postImageUrl ? (
             <Image
               src={postImageUrl}
               className="post-img"
-              id={posts[index].Id}
+              id={post.Id}
               alt="img-post"
             />
           ) : null}
           <p>{postContent}</p>
           <div className="author">
             <h5>
-              {posts[index].Nom} {posts[index].Prenom}
+              {post.Nom} {post.Prenom}
             </h5>
           </div>
           <div onClick={() => setIsEditing(true)}>
@@ -107,9 +106,6 @@ function Post({ post, index }) {
             {userId === postUserId || isAdmin === 1 ? (
               <DeleteButton index={index} />
             ) : null}
-          </div>
-          <div>
-            <LikeButton index={index} />
           </div>
         </div>
       ) : (
@@ -170,4 +166,4 @@ function Post({ post, index }) {
   )
 }
 
-export default Post
+export default TestPost

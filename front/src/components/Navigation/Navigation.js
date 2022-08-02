@@ -40,8 +40,8 @@ const NavIcon = styled.li`
 `
 
 const Navigation = () => {
-  const logout= useLogout()
-  const logOut =async()=>{
+  const logout = useLogout()
+  const logOut = async () => {
     await logout()
   }
   return (
@@ -58,8 +58,8 @@ const Navigation = () => {
           </NavIcon>
         </NavLink>
         <NavLink to="/logout">
-          <NavIcon>
-            <FontAwesomeIcon onClick={logOut} icon={faRightFromBracket}></FontAwesomeIcon>
+          <NavIcon onClick={logOut}>
+            <FontAwesomeIcon icon={faRightFromBracket}></FontAwesomeIcon>
           </NavIcon>
         </NavLink>
       </NavList>

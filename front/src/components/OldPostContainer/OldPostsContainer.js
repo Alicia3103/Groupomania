@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-
+// Redux
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import usePosts from '../../hooks/usePosts'
+
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import colors from '../../utils/styles/colors'
-import Post from '../Post/Post'
+
+import { getReduxPosts } from '../../store/PostsReducer'
+import TestPost from '../Post/Post'
 
 const OldPostsContainers = styled.div`
   display: flex;
@@ -17,43 +20,35 @@ const OldPostsContainers = styled.div`
 `
 
 const OldPostsContainer = () => {
+  const isEmpty = (value) => {
+    return (
+      value === undefined ||
+      value === null ||
+      (typeof value === 'object' && Object.keys(value).length === 0) ||
+      (typeof value === 'string' && value.trim().length === 0)
+    )
+  }
+
+  const [loadPost, setLoadPost] = useState(true)
   const [errMsg, setErrMsg] = useState('')
-  const [posts, setPosts] = usePosts()
 
   const axiosPrivate = useAxiosPrivate()
+  const dispatch = useDispatch()
+  const reduxPosts = useSelector((state) => state.posts)
 
   useEffect(() => {
-    let isMounted = true
-    const controller = new AbortController()
-
-    const getPosts = async () => {
-      try {
-        const response = await axiosPrivate.get('/api/post', {
-          signal: controller.signal,
-        })
-        if (!response.data.result.length) {
-          setErrMsg('Pas de post à afficher')
-        }
-        isMounted && setPosts(response.data.result)
-      } catch (err) {
-        setErrMsg(err)
-      }
+    if (loadPost) {
+      dispatch(getReduxPosts())
+      setLoadPost(false)
     }
+  }, [dispatch, loadPost])
 
-    getPosts()
-
-    return () => {
-      isMounted = false
-      controller.abort()
-    }
-    // eslint-disable-next-line
-  },[setPosts])
   return (
     <OldPostsContainers>
-      {posts?.length ? (
+      {!isEmpty(reduxPosts[0]) ? (
         <div>
-          {posts.map((post,index) => (
-            <Post post={post} index ={index} key={index} />
+          {reduxPosts.map((post, index) => (
+            <TestPost post={post} index={index} key={index} />
           ))}
         </div>
       ) : (

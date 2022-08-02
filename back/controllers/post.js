@@ -101,7 +101,7 @@ exports.modifyPost = (req, res, next) => {
 						return res.status(404).json({ error: 'Post non modifié' })
 					}
 
-					return res.status(200).json({ message: 'Post modifié' })
+					return res.status(200).json({imageUrl:newImageUrl, message: 'Post modifié' })
 				}
 			)
 		} else {
