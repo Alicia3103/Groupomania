@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 
 import styled from 'styled-components'
 
-import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import colors from '../../utils/styles/colors'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserPosts } from '../../store/PostsReducer'
 import TestPost from '../Post/Post'
+import useAuth from '../../hooks/useAuth'
 
 const UserPostsContainers = styled.div`
   display: flex;
@@ -20,12 +20,13 @@ const UserPostsContainers = styled.div`
 `
 
 const AllUserPostsContainer = () => {
+  const {auth}=useAuth()
   const [errMsg, setErrMsg] = useState('')
 
   const [loadPost, setLoadPost] = useState(true)
   const userPosts = useSelector((state) => state.posts)
   const dispatch = useDispatch()
-  const axiosPrivate = useAxiosPrivate()
+
 
   const isEmpty = (value) => {
     return (
@@ -38,7 +39,7 @@ const AllUserPostsContainer = () => {
 
   useEffect(() => {
     if (loadPost) {
-      dispatch(getUserPosts())
+      dispatch(getUserPosts(auth.accessToken))
       setLoadPost(false)
     }
   }, [dispatch, loadPost])

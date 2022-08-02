@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { axiosPrivate } from '../../api/axios'
-import { addPosts, getReduxPosts } from '../../store/PostsReducer'
+import useAuth from '../../hooks/useAuth'
+
+import { addPosts, getPosts } from '../../store/PostsReducer'
 
 const POST_URL = 'api/post'
 function PostForm() {
+  const {auth}=useAuth()
   const fileInputRef = useRef()
   const [preview, setPreview] = useState('')
   const [title, setTitle] = useState('')
@@ -33,12 +35,12 @@ function PostForm() {
     postData.append('image', selectedFile)
 
     try {
-      await dispatch(addPosts(postData))
+      await dispatch(addPosts(postData,auth.accessToken))
       setTitle('')
       setContent('')
       setSelectedFile()
 
-      dispatch(getReduxPosts())
+      dispatch(getPosts())
     } catch (err) {
       console.log(err)
     }

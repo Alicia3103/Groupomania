@@ -1,4 +1,4 @@
-import { axiosPrivate } from '../api/axios'
+import  { axiosPrivate } from '../api/axios'
 
 const initialState = []
 
@@ -9,11 +9,12 @@ export const DELETE_POST_ACTION = 'DELETE_POST_ACTION'
 
 export const GET_USER_POST_ACTION = 'GET_USER_POST_ACTION'
 
-export const modifyPost = (editPost, editPostData, postId) => {
+export const modifyPost = (editPost, editPostData, postId,accessToken) => {
   return (dispatch) => {
     return axiosPrivate
       .put(`api/post/${postId}`, editPostData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       })
       .then((res) => {
@@ -29,11 +30,12 @@ export const modifyPost = (editPost, editPostData, postId) => {
       .catch((err) => console.log(err))
   }
 }
-export const deletePost = (postId) => {
+export const deletePost = (postId,accessToken) => {
   return (dispatch) => {
     return axiosPrivate
       .delete(`api/post/${postId}`, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json' },
         withCredentials: true,
       })
       .then((res) => {
@@ -43,11 +45,12 @@ export const deletePost = (postId) => {
   }
 }
 
-export const addPosts = (data) => {
+export const addPosts = (data,accessToken) => {
   return (dispatch) => {
     return axiosPrivate
       .post('/api/post', data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       })
       .then((res) => {
@@ -57,20 +60,28 @@ export const addPosts = (data) => {
   }
 }
 
-export const getUserPosts = () => {
+export const getUserPosts = (accessToken) => {
   return (dispatch) => {
     return axiosPrivate
-      .get('/api/post/byUser')
+      .get('/api/post/byUser', {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((res) => {
         dispatch({ type: GET_USER_POST_ACTION, payload: res.data.result })
       })
       .catch((err) => console.log(err))
   }
 }
-export const getReduxPosts = () => {
+export const getPosts = (accessToken) => {
   return (dispatch) => {
     return axiosPrivate
-      .get('/api/post')
+      .get('/api/post', {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((res) => {
         dispatch({ type: GET_POST_ACTION, payload: res.data.result })
       })

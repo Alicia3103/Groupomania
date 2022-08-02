@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import colors from '../../utils/styles/colors'
 
-import { getReduxPosts } from '../../store/PostsReducer'
+import { getPosts } from '../../store/PostsReducer'
 import TestPost from '../Post/Post'
+import useAuth from '../../hooks/useAuth'
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 
 const OldPostsContainers = styled.div`
   display: flex;
@@ -20,6 +21,7 @@ const OldPostsContainers = styled.div`
 `
 
 const OldPostsContainer = () => {
+  const axiosPrivate=useAxiosPrivate()
   const isEmpty = (value) => {
     return (
       value === undefined ||
@@ -30,16 +32,23 @@ const OldPostsContainer = () => {
   }
 
   const [loadPost, setLoadPost] = useState(true)
+
   const [errMsg, setErrMsg] = useState('')
 
-  const axiosPrivate = useAxiosPrivate()
-  const dispatch = useDispatch()
+  const { auth } = useAuth()
+  
+ 
   const reduxPosts = useSelector((state) => state.posts)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (loadPost) {
-      dispatch(getReduxPosts())
-      setLoadPost(false)
+      try {
+        dispatch(getPosts(auth.accessToken))
+        setLoadPost(false)
+      } catch (err) {
+        setErrMsg(err)
+      }
     }
   }, [dispatch, loadPost])
 

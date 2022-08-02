@@ -9,7 +9,10 @@ const useAxiosPrivate = () => {
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
+        console.log(config.url)
+        console.log('A')
         if (!config.headers['authorization']) {
+          console.log('B ' + JSON.stringify(auth))
           config.headers['authorization'] = `Bearer ${auth?.accessToken}`
         }
         return config
@@ -22,7 +25,6 @@ const useAxiosPrivate = () => {
         return response
       },
       async (error) => {
-        console.log('error config', error.config)
         const originalRequest = error.config
         if (
           error.config.url !== '/api/refreshToken' &&
@@ -31,25 +33,20 @@ const useAxiosPrivate = () => {
         ) {
           originalRequest._retry = true
 
-          console.log('refresh token')
-          const response=await axios
-            .get('/api/refreshToken', {
-              withCredentials: true,
-            })
-            console.log('rezponse',response)
-            
-              const accessToken = response.data.token
+          const response = await axios.get('/api/refreshToken', {
+            withCredentials: true,
+          })
 
-              setAuth({
-                userId: response.data.userId,
-                accessToken,
-                isAdmin: response.data.isAdmin,
-              
-              })
-              console.log('response', response)
-              originalRequest.headers['authorization'] = `Bearer ${accessToken}`
-            
-            
+          const accessToken = response.data.token
+
+          setAuth({
+            userId: response.data.userId,
+            accessToken,
+            isAdmin: response.data.isAdmin,
+          })
+          console.log('response', response)
+          originalRequest.headers['authorization'] = `Bearer ${accessToken}`
+
           return axiosPrivate(originalRequest)
         }
         Promise.reject(error)
@@ -60,7 +57,7 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestIntercept)
       axiosPrivate.interceptors.response.eject(responseIntercept)
     }
-  }, [auth,setAuth])
+  }, [auth, setAuth])
   return axiosPrivate
 }
 export default useAxiosPrivate

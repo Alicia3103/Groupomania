@@ -28,11 +28,13 @@ exports.createPost = (req, res, next) => {
 
 //fonction supression du post
 exports.deletePost = (req, res, next) => {
+	
 	const id = req.params.id
 	db.query('SELECT * FROM post WHERE Id=?', [id], function (err, result) {
 		if (err || !result.length) {
 			return res.status(404).json({ error: 'Post non trouvé' })
-		} else if (req.auth.userId === result[0].UserId || req.auth.isAdmin === 1) {
+		} else if (req.auth.userId===result[0].UserId || req.auth.isAdmin === 1) {
+
 			const imageUrl = result[0].ImageUrl
 			if (imageUrl) {
 				const filename = imageUrl.split('/images/')[1]
@@ -64,7 +66,7 @@ exports.modifyPost = (req, res, next) => {
 		if (err || !result.length) {
 			return res.status(404).json({ error: 'Post non trouvé' })
 		}
-		if (req.auth.userId === result[0].UserId) {
+		if (req.auth.userId === result[0].UserId || req.auth.isAdmin === 1) {
 			console.log('file', body)
 
 			const oldImage = result[0].ImageUrl

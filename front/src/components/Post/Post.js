@@ -15,26 +15,34 @@ const Image = styled.img`
 
 function TestPost({ index }) {
   const { auth } = useAuth()
-
-  const reduxPosts = useSelector((state) => state.posts)
   const userId = auth.userId
+const { isAdmin } = auth.isAdmin
+
+
+  const dispatch = useDispatch()
+  const reduxPosts = useSelector((state) => state.posts)
+  
   const post = reduxPosts[index]
   const postUserId = post.UserId
-  const { isAdmin } = auth.isAdmin
-  const dispatch = useDispatch()
+  
+
   const postId = post.Id
   const postTitle = post.Title
   const postContent = post.Content
   const postImageUrl = post.ImageUrl
+
+
   const fileInputRef = useRef()
   const [preview, setPreview] = useState('')
+
+  const [isEditing, setIsEditing] = useState(false)
 
   const [editingTitle, setEditingTitle] = useState(postTitle)
   const [editingContent, setEditingContent] = useState(postContent)
   const [editingSelectedFile, setEditingSelectedFile] = useState()
   const [deleteImage, setDeleteImage] = useState(false)
 
-  const [isEditing, setIsEditing] = useState(false)
+
   useEffect(() => {
     if (isEditing && postImageUrl) console.log('postImageUrl', postImageUrl)
     setPreview(postImageUrl)
@@ -54,14 +62,17 @@ function TestPost({ index }) {
 
   const handleEdit = async (e) => {
     e.preventDefault()
+    
     setIsEditing(false)
-    console.log('deleteImage', deleteImage)
+  
+    
     const editPost = {
       title: editingTitle,
       content: editingContent,
       id: postId,
       deleteImage: deleteImage,
     }
+
     const editPostData = new FormData()
 
     editPostData.set('post', JSON.stringify(editPost))
@@ -69,8 +80,8 @@ function TestPost({ index }) {
     editPostData.append('image', editingSelectedFile)
 
     try {
-      console.log(editPost)
-      await dispatch(modifyPost(editPost, editPostData, postId))
+      
+      await dispatch(modifyPost(editPost, editPostData, postId,auth.accessToken))
 
       setEditingTitle('')
       setEditingContent('')
@@ -100,7 +111,7 @@ function TestPost({ index }) {
             </h5>
           </div>
           <div onClick={() => setIsEditing(true)}>
-            {userId === postUserId ? <ModifyButton /> : null}
+            {userId === postUserId || isAdmin === 1 ? <ModifyButton /> : null}
           </div>
           <div>
             {userId === postUserId || isAdmin === 1 ? (

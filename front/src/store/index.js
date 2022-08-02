@@ -4,10 +4,11 @@ import thunk from 'redux-thunk'
 import { PostsReducer } from './PostsReducer'
 import { LikesReducer } from './LikesReducer'
 
+
 export const store = createStore(
   combineReducers({
     posts: PostsReducer,
-    likes: LikesReducer,
+    likes: LikesReducer
   }),
   composeWithDevTools(applyMiddleware(thunk))
 )

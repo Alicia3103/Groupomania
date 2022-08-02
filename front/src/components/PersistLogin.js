@@ -13,7 +13,7 @@ const PersistLogin = () => {
         const response = await axios.get('/api/refreshToken', {
           withCredentials: true,
         })
-        console.log('rezponse', response)
+        
 
         const accessToken = response.data.token
 

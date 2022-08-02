@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { axiosPrivate } from '../../api/axios'
+import axios from '../../api/axios'
 import useAuth from '../../hooks/useAuth'
 
 import { useSelector } from 'react-redux'
@@ -18,7 +18,7 @@ function LikeButton({ index }) {
   useEffect(() => {
     const getLikedPosts = async () => {
       try {
-        const response = await axiosPrivate.get(`/api/post/${postId}/like`, {
+        const response = await axios.get(`/api/post/${postId}/like`, {
           headers: {
             authorization: `Bearer ${auth.accessToken}`,
           },
@@ -34,7 +34,7 @@ function LikeButton({ index }) {
   }, [])
 
   const handleClick = () => {
-    axiosPrivate.post(`api/post/${postId}/like`, {
+    axios.post(`api/post/${postId}/like`, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true,
     })
