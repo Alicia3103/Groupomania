@@ -5,9 +5,8 @@ import LikeButton from './LikeButton'
 import ModifyButton from './ModifyButton'
 import DeleteButton from './DeleteButton'
 
-
 import { useDispatch, useSelector } from 'react-redux'
-import { modifyPost } from '../../store/PostsReducer'
+import { ModifyPost } from '../../store/PostsReducer'
 
 const Image = styled.img`
   width: 60%;
@@ -16,21 +15,18 @@ const Image = styled.img`
 function Post({ index }) {
   const { auth } = useAuth()
   const userId = auth.userId
-const { isAdmin } = auth.isAdmin
-
+  const { isAdmin } = auth.isAdmin
 
   const dispatch = useDispatch()
   const reduxPosts = useSelector((state) => state.posts)
-  
+
   const post = reduxPosts[index]
   const postUserId = post.UserId
-  
 
   const postId = post.Id
   const postTitle = post.Title
   const postContent = post.Content
   const postImageUrl = post.ImageUrl
-
 
   const fileInputRef = useRef()
   const [preview, setPreview] = useState('')
@@ -41,7 +37,6 @@ const { isAdmin } = auth.isAdmin
   const [editingContent, setEditingContent] = useState(postContent)
   const [editingSelectedFile, setEditingSelectedFile] = useState()
   const [deleteImage, setDeleteImage] = useState(false)
-
 
   useEffect(() => {
     if (isEditing && postImageUrl) console.log('postImageUrl', postImageUrl)
@@ -62,10 +57,9 @@ const { isAdmin } = auth.isAdmin
 
   const handleEdit = async (e) => {
     e.preventDefault()
-    
+
     setIsEditing(false)
-  
-    
+
     const editPost = {
       title: editingTitle,
       content: editingContent,
@@ -80,8 +74,9 @@ const { isAdmin } = auth.isAdmin
     editPostData.append('image', editingSelectedFile)
 
     try {
-      
-      await dispatch(modifyPost(editPost, editPostData, postId,auth.accessToken))
+      await dispatch(
+        ModifyPost(editPost, editPostData, postId, auth.accessToken)
+      )
 
       setEditingTitle('')
       setEditingContent('')

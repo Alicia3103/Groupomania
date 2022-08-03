@@ -10,7 +10,6 @@ import colors from '../utils/styles/colors'
 
 import OldPostsContainer from '../components/OldPostContainer/OldPostsContainer'
 
-
 const HomePage = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,7 +42,6 @@ const NewPostContainer = styled.div`
 `
 
 const Home = () => {
-  
   return (
     <HomePage>
       <Header />

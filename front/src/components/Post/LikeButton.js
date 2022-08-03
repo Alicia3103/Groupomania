@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import useAuth from '../../hooks/useAuth'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { likePost } from '../../store/PostsReducer'
-import { addLike } from '../../store/LikesReducer'
+import { LikePost } from '../../store/PostsReducer'
+import { AddLike } from '../../store/LikesReducer'
 
 function LikeButton({ index }) {
   const { auth } = useAuth()
@@ -24,10 +24,10 @@ function LikeButton({ index }) {
   }, [likedPost])
 
   const handleClick = () => {
-    dispatch(likePost(postId, auth.accessToken, auth.userId))
+    dispatch(LikePost(postId, auth.accessToken, auth.userId))
 
-    dispatch(addLike(postId))
-    
+    dispatch(AddLike(postId))
+
     setIsLiked(!isLiked)
   }
 

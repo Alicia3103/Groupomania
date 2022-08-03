@@ -4,7 +4,7 @@ import Connexion from './pages/Connexion'
 
 import { createGlobalStyle } from 'styled-components'
 import Home from './pages/Home'
-
+import useInterceptorsAxiosPrivate from './hooks/useInterceptorsAxiosPrivate'
 import User from './pages/User'
 import RequireAuth from './components/RequireAuth/RequireAuth'
 import PersistLogin from './components/PersistLogin'
@@ -22,6 +22,7 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const App = () => {
+  const interceptorsAxiosPrivate = useInterceptorsAxiosPrivate()
   return (
     <BrowserRouter>
       <GlobalStyle />

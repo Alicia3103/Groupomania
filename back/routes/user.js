@@ -11,7 +11,7 @@ const auth = require('../middlewares/auth')
 router.post('/signup', emailValid, passwordValid, userCtrl.signup)
 router.post('/login', limitMax.limiter, userCtrl.login)
 router.get('/user', auth, userCtrl.getUser)
-router.get('/logout',userCtrl.logout)
+router.get('/logout', userCtrl.logout)
 router.put('/unactiveAccount', auth, userCtrl.unactiveAccount)
 
 module.exports = router

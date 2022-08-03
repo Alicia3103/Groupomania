@@ -135,9 +135,8 @@ const SignUpForm = () => {
       if (!err?.response) {
         setErrMsg('Pas de réponse Serveur')
       } else if (err.response?.status === 400) {
-       
         setErrMsg(err.response.data.error)
-      }else if (err.response?.status === 401) {
+      } else if (err.response?.status === 401) {
         setErrMsg('Compte désactivé')
       } else if (err.response?.status === 404) {
         setErrMsg('Utilisateur non trouvé')
@@ -252,7 +251,7 @@ const SignUpForm = () => {
 
         <InputButton
           type="submit"
-         disabled={
+          disabled={
             !validPrenom || !validNom || !validEmail || !validPassword
               ? true
               : false

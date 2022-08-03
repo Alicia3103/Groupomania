@@ -135,7 +135,7 @@ exports.getAllPost = (req, res, next) => {
 
 exports.getLikedPost = (req, res, next) => {
 	const userId = req.auth.userId
-	console.log('getlikes',req.auth.userId)
+	console.log('getlikes', req.auth.userId)
 	db.query(
 		'SELECT PostId FROM userLiked WHERE UserId=? ',
 		[userId],
@@ -146,16 +146,14 @@ exports.getLikedPost = (req, res, next) => {
 					.json({ error: 'impossible de récupérer les données' })
 			}
 			console.log(result)
-			let arrayPostId=[]
-			result.forEach((Like)=>{
+			let arrayPostId = []
+			result.forEach((Like) => {
 				arrayPostId.push(Like.PostId)
 			})
 			console.log(arrayPostId)
-			return res
-					.status(200)
-					.json({ arrayPostId })
-		})
-
+			return res.status(200).json({ arrayPostId })
+		}
+	)
 }
 
 //fonction like
@@ -193,9 +191,9 @@ exports.likePost = (req, res, next) => {
 										.status(400)
 										.json({ error: 'impossible de recupérer les likes' })
 								}
-								const nbLike=result[0].Likes
+								const nbLike = result[0].Likes
 								console.log(result[0].Likes)
-								return res.status(200).json({ nbLike,message: 'Like enlevé' })
+								return res.status(200).json({ nbLike, message: 'Like enlevé' })
 							}
 						)
 					}
@@ -221,12 +219,11 @@ exports.likePost = (req, res, next) => {
 										.status(400)
 										.json({ error: 'impossible de recupérer les likes' })
 								}
-								const nbLike=result[0].Likes
+								const nbLike = result[0].Likes
 								console.log(result[0].Likes)
 								return res.status(200).json({ nbLike, message: 'Like ajouté' })
 							}
 						)
-						
 					}
 				)
 			}

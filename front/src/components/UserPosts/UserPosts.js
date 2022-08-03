@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import colors from '../../utils/styles/colors'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserPosts } from '../../store/PostsReducer'
+import { GetUserPosts } from '../../store/PostsReducer'
 import Post from '../Post/Post'
 import useAuth from '../../hooks/useAuth'
 
@@ -20,13 +20,12 @@ const UserPostsContainers = styled.div`
 `
 
 const AllUserPostsContainer = () => {
-  const {auth}=useAuth()
+  const { auth } = useAuth()
   const [errMsg, setErrMsg] = useState('')
 
   const [loadPost, setLoadPost] = useState(true)
   const userPosts = useSelector((state) => state.posts)
   const dispatch = useDispatch()
-
 
   const isEmpty = (value) => {
     return (
@@ -39,7 +38,7 @@ const AllUserPostsContainer = () => {
 
   useEffect(() => {
     if (loadPost) {
-      dispatch(getUserPosts(auth.accessToken))
+      dispatch(GetUserPosts(auth.accessToken))
       setLoadPost(false)
     }
   }, [dispatch, loadPost])
@@ -53,7 +52,7 @@ const AllUserPostsContainer = () => {
           ))}
         </div>
       ) : (
-        <p>{errMsg}</p>
+        <p>Pas de posts à afficher</p>
       )}
     </UserPostsContainers>
   )

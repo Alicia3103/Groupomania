@@ -10,10 +10,10 @@ export const LIKE_POST_ACTION = 'LIKE_POST_ACTION'
 
 export const GET_USER_POST_ACTION = 'GET_USER_POST_ACTION'
 
-export const likePost = (postId, accessToken,userId) => {
+export function LikePost(postId, accessToken, userId) {
   return (dispatch) => {
     return axiosPrivate
-      .post(`api/post/${postId}/like`,{
+      .post(`api/post/${postId}/like`, {
         headers: {
           authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
@@ -22,18 +22,18 @@ export const likePost = (postId, accessToken,userId) => {
       })
       .then((res) => {
         console.log(res.data.nbLike)
-        const post={
-          id:postId,
-          Likes:res.data.nbLike
+        const post = {
+          id: postId,
+          Likes: res.data.nbLike,
         }
 
-        dispatch({ type: LIKE_POST_ACTION, payload: post})
+        dispatch({ type: LIKE_POST_ACTION, payload: post })
       })
       .catch((err) => console.log(err))
   }
 }
 
-export const modifyPost = (editPost, editPostData, postId, accessToken) => {
+export function ModifyPost(editPost, editPostData, postId, accessToken) {
   return (dispatch) => {
     return axiosPrivate
       .put(`api/post/${postId}`, editPostData, {
@@ -56,7 +56,7 @@ export const modifyPost = (editPost, editPostData, postId, accessToken) => {
       .catch((err) => console.log(err))
   }
 }
-export const deletePost = (postId, accessToken) => {
+export function DeletePost(postId, accessToken) {
   return (dispatch) => {
     return axiosPrivate
       .delete(`api/post/${postId}`, {
@@ -73,7 +73,7 @@ export const deletePost = (postId, accessToken) => {
   }
 }
 
-export const addPosts = (data, accessToken) => {
+export function AddPosts(data, accessToken) {
   return (dispatch) => {
     return axiosPrivate
       .post('/api/post', data, {
@@ -90,7 +90,7 @@ export const addPosts = (data, accessToken) => {
   }
 }
 
-export const getUserPosts = (accessToken) => {
+export function GetUserPosts(accessToken) {
   return (dispatch) => {
     return axiosPrivate
       .get('/api/post/byUser', {
@@ -104,7 +104,7 @@ export const getUserPosts = (accessToken) => {
       .catch((err) => console.log(err))
   }
 }
-export const getPosts = (accessToken) => {
+export function GetPosts(accessToken) {
   return (dispatch) => {
     return axiosPrivate
       .get('/api/post', {

@@ -7,7 +7,6 @@ import backgroundImage from './groupomaniafond.jpg'
 
 import { Link } from 'react-router-dom'
 
-
 const LogOutPage = styled.section`
   display: flex;
   flex-direction: column;
@@ -38,8 +37,6 @@ const Connect = styled.div`
 `
 
 const LogOut = () => {
-  
-
   return (
     <LogOutPage>
       <Header />

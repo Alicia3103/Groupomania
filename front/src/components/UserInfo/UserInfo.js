@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import {  useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useAuth from '../../hooks/useAuth'
-import useAxiosPrivate from '../../hooks/useAxiosPrivate'
+import useInterceptorsAxiosPrivate from '../../hooks/useInterceptorsAxiosPrivate'
+import { GetUserInfos, UnactiveUser } from '../../store/UserReducer'
 import colors from '../../utils/styles/colors'
 
 const UserInfoContainer = styled.div`
@@ -12,35 +14,14 @@ const UserInfoContainer = styled.div`
   border-radius: 10px;
 `
 const UserInfo = () => {
-  const [user, setUser] = useState()
-  const [errMsg, setErrMsg] = useState('')
-  const axiosPrivate = useAxiosPrivate()
+  const { auth } = useAuth()
+
   const navigate = useNavigate()
-  
+  const infoUser = useSelector((state) => state.user)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    let isMounted = true
-    const controller = new AbortController()
-    const USER_URL = '/api/auth/user'
-
-    const getUser = async () => {
-      try {
-        const response = await axiosPrivate.get(USER_URL, {
-          signal: controller.signal,
-        })
-
-        isMounted && setUser(response.data.result[0])
-      } catch (err) {
-        setErrMsg(err)
-      }
-    }
-
-    getUser()
-
-    return () => {
-      isMounted = false
-      controller.abort()
-    }
+    dispatch(GetUserInfos(auth.accessToken))
     // eslint-disable-next-line
   }, [])
   const { setAuth } = useAuth()
@@ -48,34 +29,23 @@ const UserInfo = () => {
   const handleClick = (e) => {
     e.preventDefault()
 
-    const DELETE_URL = '/api/auth/unactiveAccount'
+    dispatch(UnactiveUser(auth.accessToken))
+    setAuth({ userId: '', accessToken: '' })
 
-    try {
-      axiosPrivate.put(DELETE_URL)
-      const accessToken = ''
-      const userId = ''
-
-      setAuth({ userId, accessToken })
-
-      navigate('/')
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg('Pas de réponse Serveur')
-      } else {
-        setErrMsg(err.response.data.error)
-      }
-    }
+    navigate('/')
   }
 
   return (
     <UserInfoContainer>
-      <div className="userInfo">
-        <p className="nomPrenom">
-          {user?.Nom} {user?.Prenom}
-        </p>
-        <p className="mail">{user?.Email}</p>
-        <p>{errMsg}</p>
+      <div>
+        <div className="userInfo">
+          <p className="nomPrenom">
+            {infoUser?.Nom} {infoUser?.Prenom}
+          </p>
+          <p className="mail">{infoUser?.Email}</p>
+        </div>
       </div>
+
       <button onClick={handleClick} className="desactiverCompte">
         Désactiver le compte
       </button>

@@ -13,7 +13,6 @@ const PersistLogin = () => {
         const response = await axios.get('/api/refreshToken', {
           withCredentials: true,
         })
-        
 
         const accessToken = response.data.token
 
@@ -30,7 +29,6 @@ const PersistLogin = () => {
     }
     !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false)
   }, [])
- 
 
   return <>{isLoading ? <p>Loading</p> : <Outlet />}</>
 }

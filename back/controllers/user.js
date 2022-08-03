@@ -68,22 +68,32 @@ exports.login = (req, res, next) => {
 						process.env.REFRESH_SECRET_TOKEN,
 						{ expiresIn: '24h' }
 					)
-					res.cookie('refreshToken', refreshToken, {
-						httpOnly: true,
-						samesite:'None',
-						secure:true,
-						maxAge: 24 * 60 * 60 * 1000,
-					})
-					return res.status(200).json({
-						userId: user.Id,
-						isAdmin: user.IsAdmin,
-						//encodage avec la fonction 'sign'
-						token: jwt.sign(
-							{ userId: user.Id, isAdmin: user.IsAdmin },
-							secretToken,
-							{ expiresIn: '1800s' }
-						),
-					})
+					db.query(
+						'UPDATE user SET RefreshToken=? WHERE Id=?',
+						[refreshToken, user.Id],
+						function (err, result) {
+							if (err) {
+								return res.status(404).json({ error: 'Post non modifié' })
+							}
+							res.cookie('refreshToken', refreshToken, {
+								httpOnly: true,
+								samesite: 'None',
+								secure: true,
+								maxAge: 24 * 60 * 60 * 1000,
+							})
+
+							return res.status(200).json({
+								userId: user.Id,
+								isAdmin: user.IsAdmin,
+								//encodage avec la fonction 'sign'
+								token: jwt.sign(
+									{ userId: user.Id, isAdmin: user.IsAdmin },
+									secretToken,
+									{ expiresIn: '1800s' }
+								),
+							})
+						}
+					)
 				})
 				.catch((error) => res.status(500).json({ error }))
 		}
@@ -92,12 +102,26 @@ exports.login = (req, res, next) => {
 
 //fonction logout
 exports.logout = (req, res, next) => {
-	const cookies=req.cookies
-	if(!cookies?.refreshToken) return res.status(204).json({message:'Pas de cookies'})
-	res.clearCookie('refreshToken',{ httpOnly:true,samesite:'None',secure:true})
-	return res.status(204).json({message:'cookies supprimés'})
-}
+	const cookies = req.cookies
+	if (!cookies?.refreshToken)
+		return res.status(204).json({ message: 'Pas de cookies' })
+	db.query(
+		'UPDATE user SET RefreshToken=? WHERE RefreshToken=?',
+		[null, cookies.refreshToken],
+		function (err, result) {
+			if (err) {
+				return res.status(404).json({ error: 'Post non modifié' })
+			}
 
+			res.clearCookie('refreshToken', {
+				httpOnly: true,
+				samesite: 'None',
+				secure: true,
+			})
+			return res.status(204).json({ message: 'cookies supprimés' })
+		}
+	)
+}
 
 exports.getUser = (req, res, next) => {
 	const userId = req.auth.userId
@@ -110,7 +134,13 @@ exports.getUser = (req, res, next) => {
 			} else if (result[0].Actif === 0) {
 				return res.status(403).json({ error: 'Compte désactivé' })
 			}
-			return res.status(200).json({ result })
+			const user = {
+				Nom: result[0].Nom,
+				Prenom: result[0].Prenom,
+				Email: result[0].Email,
+			}
+			console.log(user)
+			return res.status(200).json({ user })
 		}
 	)
 }
