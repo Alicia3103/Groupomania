@@ -73,5 +73,15 @@ db.query(
 		console.log('Table userLiked crée !')
 	}
 )
+db.query(
+	`INSERT INTO user (Email,Password,Nom,Prenom,isAdmin,Actif) VALUES('admin.test@test.fr' , '$2b$10$.v2U89XqmFpA8GCGkBIe..4o/x4fAY.xt8FZ8wJ8OhzCaCFsLE8Ze','ADMIN','admin',1,1)`,
+	function (err, result) {
+		if (err) {
+			console.log('Utilisateur Admin déjà crée !')
+		} else {
+			console.log('Utilisateur Admin crée !')
+		}
+	}
+)
 
 module.exports = db
