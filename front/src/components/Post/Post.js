@@ -15,7 +15,7 @@ const Image = styled.img`
 function Post({ index }) {
   const { auth } = useAuth()
   const userId = auth.userId
-  const { isAdmin } = auth.isAdmin
+  const isAdmin = auth.isAdmin
 
   const dispatch = useDispatch()
   const reduxPosts = useSelector((state) => state.posts)
@@ -55,7 +55,7 @@ function Post({ index }) {
     }
   }, [editingSelectedFile])
 
-  const handleEdit = async (e) => {
+  const handleEdit = (e) => {
     e.preventDefault()
 
     setIsEditing(false)
@@ -73,17 +73,11 @@ function Post({ index }) {
 
     editPostData.append('image', editingSelectedFile)
 
-    try {
-      await dispatch(
-        ModifyPost(editPost, editPostData, postId, auth.accessToken)
-      )
+    dispatch(ModifyPost(editPost, editPostData, postId, auth.accessToken))
 
-      setEditingTitle('')
-      setEditingContent('')
-      setEditingSelectedFile()
-    } catch (err) {
-      console.log(err)
-    }
+    setEditingTitle('')
+    setEditingContent('')
+    setEditingSelectedFile()
   }
 
   return (
