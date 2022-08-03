@@ -1,4 +1,4 @@
-import  { axiosPrivate } from '../api/axios'
+import { axiosPrivate } from '../api/axios'
 
 const initialState = []
 
@@ -6,15 +6,41 @@ export const ADD_POST_ACTION = 'ADD_POST_ACTION'
 export const GET_POST_ACTION = 'GET_POST_ACTION'
 export const EDIT_POST_ACTION = 'EDIT_POST_ACTION'
 export const DELETE_POST_ACTION = 'DELETE_POST_ACTION'
+export const LIKE_POST_ACTION = 'LIKE_POST_ACTION'
 
 export const GET_USER_POST_ACTION = 'GET_USER_POST_ACTION'
 
-export const modifyPost = (editPost, editPostData, postId,accessToken) => {
+export const likePost = (postId, accessToken,userId) => {
+  return (dispatch) => {
+    return axiosPrivate
+      .post(`api/post/${postId}/like`,{
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.data.nbLike)
+        const post={
+          id:postId,
+          Likes:res.data.nbLike
+        }
+
+        dispatch({ type: LIKE_POST_ACTION, payload: post})
+      })
+      .catch((err) => console.log(err))
+  }
+}
+
+export const modifyPost = (editPost, editPostData, postId, accessToken) => {
   return (dispatch) => {
     return axiosPrivate
       .put(`api/post/${postId}`, editPostData, {
-        headers: { authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'multipart/form-data' },
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
         withCredentials: true,
       })
       .then((res) => {
@@ -30,12 +56,14 @@ export const modifyPost = (editPost, editPostData, postId,accessToken) => {
       .catch((err) => console.log(err))
   }
 }
-export const deletePost = (postId,accessToken) => {
+export const deletePost = (postId, accessToken) => {
   return (dispatch) => {
     return axiosPrivate
       .delete(`api/post/${postId}`, {
-        headers: { authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json' },
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
         withCredentials: true,
       })
       .then((res) => {
@@ -45,12 +73,14 @@ export const deletePost = (postId,accessToken) => {
   }
 }
 
-export const addPosts = (data,accessToken) => {
+export const addPosts = (data, accessToken) => {
   return (dispatch) => {
     return axiosPrivate
       .post('/api/post', data, {
-        headers: { authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'multipart/form-data' },
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
         withCredentials: true,
       })
       .then((res) => {
@@ -91,6 +121,15 @@ export const getPosts = (accessToken) => {
 
 export function PostsReducer(state = initialState, action) {
   switch (action.type) {
+    case LIKE_POST_ACTION:
+      return state.map((post) => {
+        if (post.Id === action.payload.id) {
+          return {
+            ...post,
+            Likes: action.payload.Likes,
+          }
+        } else return post
+      })
     case ADD_POST_ACTION:
       return [action.payload, ...state]
     case EDIT_POST_ACTION:

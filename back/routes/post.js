@@ -13,6 +13,6 @@ router.get('/byUser', auth, postCtrl.getAllUserPost)
 router.post('/', auth, multer, postCtrl.createPost)
 router.put('/:id', auth, multer, postCtrl.modifyPost)
 router.delete('/:id', auth, postCtrl.deletePost)
-router.get('/:id/like', auth, postCtrl.getLikedPost)
+router.get('/like', auth, postCtrl.getLikedPost)
 router.post('/:id/like', auth, postCtrl.likePost)
 module.exports = router

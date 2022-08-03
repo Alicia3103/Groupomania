@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import colors from '../../utils/styles/colors'
 
 import { getPosts } from '../../store/PostsReducer'
+import { getLikes } from '../../store/LikesReducer'
 import TestPost from '../Post/Post'
 import useAuth from '../../hooks/useAuth'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
@@ -45,6 +46,7 @@ const OldPostsContainer = () => {
     if (loadPost) {
       try {
         dispatch(getPosts(auth.accessToken))
+        dispatch(getLikes(auth.accessToken))
         setLoadPost(false)
       } catch (err) {
         setErrMsg(err)

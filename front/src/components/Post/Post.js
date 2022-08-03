@@ -118,6 +118,9 @@ const { isAdmin } = auth.isAdmin
               <DeleteButton index={index} />
             ) : null}
           </div>
+          <div>
+            <LikeButton index={index} />
+          </div>
         </div>
       ) : (
         <div>

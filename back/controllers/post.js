@@ -28,13 +28,11 @@ exports.createPost = (req, res, next) => {
 
 //fonction supression du post
 exports.deletePost = (req, res, next) => {
-	
 	const id = req.params.id
 	db.query('SELECT * FROM post WHERE Id=?', [id], function (err, result) {
 		if (err || !result.length) {
 			return res.status(404).json({ error: 'Post non trouvé' })
-		} else if (req.auth.userId===result[0].UserId || req.auth.isAdmin === 1) {
-
+		} else if (req.auth.userId === result[0].UserId || req.auth.isAdmin === 1) {
 			const imageUrl = result[0].ImageUrl
 			if (imageUrl) {
 				const filename = imageUrl.split('/images/')[1]
@@ -74,7 +72,7 @@ exports.modifyPost = (req, res, next) => {
 
 			if (body.deleteImage === true) {
 				newImageUrl = ''
-		
+
 				if (oldImage) {
 					const filename = oldImage.split('/images/')[1]
 					fs.unlinkSync(`images/${filename}`)
@@ -87,7 +85,7 @@ exports.modifyPost = (req, res, next) => {
 					req.headers.host +
 					'/images/' +
 					req.file.filename
-					
+
 				if (oldImage) {
 					const filename = oldImage.split('/images/')[1]
 					fs.unlinkSync(`images/${filename}`)
@@ -103,7 +101,9 @@ exports.modifyPost = (req, res, next) => {
 						return res.status(404).json({ error: 'Post non modifié' })
 					}
 
-					return res.status(200).json({imageUrl:newImageUrl, message: 'Post modifié' })
+					return res
+						.status(200)
+						.json({ imageUrl: newImageUrl, message: 'Post modifié' })
 				}
 			)
 		} else {
@@ -118,7 +118,7 @@ exports.modifyPost = (req, res, next) => {
 exports.getAllPost = (req, res, next) => {
 	console.log(req.auth)
 	db.query(
-		'SELECT post.Id,Title,Content,ImageUrl,CreateTime,UserId, user.Nom,user.Prenom FROM post LEFT JOIN user On post.UserId=user.Id ORDER BY CreateTime DESC',
+		'SELECT post.Id,Title,Content,ImageUrl,CreateTime,UserId,(SELECT count(*) FROM userliked WHERE post.Id=userliked.PostId) AS Likes,user.Nom,user.Prenom FROM post LEFT JOIN user On post.UserId=user.Id ORDER BY CreateTime DESC',
 		function (err, result) {
 			if (err) {
 				return res
@@ -135,33 +135,34 @@ exports.getAllPost = (req, res, next) => {
 
 exports.getLikedPost = (req, res, next) => {
 	const userId = req.auth.userId
-	const postId = req.params.id
+	console.log('getlikes',req.auth.userId)
 	db.query(
-		'SELECT UserId FROM userLiked WHERE PostId=? ',
-		[postId],
+		'SELECT PostId FROM userLiked WHERE UserId=? ',
+		[userId],
 		function (err, result) {
 			if (err) {
 				return res
 					.status(400)
 					.json({ error: 'impossible de récupérer les données' })
 			}
-			if (result.length) {
-				let isLiked = false
-				for (let i = 0; i < result.length; i++) {
-					if (result[i].UserId === userId) isLiked = true
-				}
+			console.log(result)
+			let arrayPostId=[]
+			result.forEach((Like)=>{
+				arrayPostId.push(Like.PostId)
+			})
+			console.log(arrayPostId)
+			return res
+					.status(200)
+					.json({ arrayPostId })
+		})
 
-				return res.status(200).json({ result, isLiked })
-			}
-			const isLiked = false
-			return res.status(200).json({ result, isLiked })
-		}
-	)
 }
 
 //fonction like
 
 exports.likePost = (req, res, next) => {
+	console.log(req.params.id)
+	console.log(req.auth.userId)
 	const postId = req.params.id
 	const userId = req.auth.userId
 
@@ -182,7 +183,21 @@ exports.likePost = (req, res, next) => {
 						if (err) {
 							return res.status(400).json({ error: 'Like non supprimé' })
 						}
-						return res.status(200).json({ message: 'Like supprimé-1' })
+						db.query(
+							'SELECT (SELECT count(*) FROM userliked WHERE post.Id=userliked.PostId) AS Likes FROM post WHERE post.Id=?',
+							[postId],
+							function (err, result) {
+								if (err) {
+									console.log(err)
+									return res
+										.status(400)
+										.json({ error: 'impossible de recupérer les likes' })
+								}
+								const nbLike=result[0].Likes
+								console.log(result[0].Likes)
+								return res.status(200).json({ nbLike,message: 'Like enlevé' })
+							}
+						)
 					}
 				)
 			} else {
@@ -196,8 +211,22 @@ exports.likePost = (req, res, next) => {
 								.status(400)
 								.json({ error: 'impossible de liker le post' })
 						}
-
-						return res.status(200).json({ message: 'Like ajouté' })
+						db.query(
+							'SELECT (SELECT count(*) FROM userliked WHERE post.Id=userliked.PostId) AS Likes FROM post WHERE post.Id=?',
+							[postId],
+							function (err, result) {
+								if (err) {
+									console.log(err)
+									return res
+										.status(400)
+										.json({ error: 'impossible de recupérer les likes' })
+								}
+								const nbLike=result[0].Likes
+								console.log(result[0].Likes)
+								return res.status(200).json({ nbLike, message: 'Like ajouté' })
+							}
+						)
+						
 					}
 				)
 			}
