@@ -7,7 +7,7 @@ import colors from '../../utils/styles/colors'
 
 import { getPosts } from '../../store/PostsReducer'
 import { getLikes } from '../../store/LikesReducer'
-import TestPost from '../Post/Post'
+import Post from '../Post/Post'
 import useAuth from '../../hooks/useAuth'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 
@@ -59,7 +59,7 @@ const OldPostsContainer = () => {
       {!isEmpty(reduxPosts[0]) ? (
         <div>
           {reduxPosts.map((post, index) => (
-            <TestPost post={post} index={index} key={index} />
+            <Post post={post} index={index} key={index} />
           ))}
         </div>
       ) : (

@@ -6,7 +6,7 @@ import colors from '../../utils/styles/colors'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserPosts } from '../../store/PostsReducer'
-import TestPost from '../Post/Post'
+import Post from '../Post/Post'
 import useAuth from '../../hooks/useAuth'
 
 const UserPostsContainers = styled.div`
@@ -49,7 +49,7 @@ const AllUserPostsContainer = () => {
       {!isEmpty(userPosts[0]) ? (
         <div>
           {userPosts.map((post, index) => (
-            <TestPost post={post} index={index} key={index} />
+            <Post post={post} index={index} key={index} />
           ))}
         </div>
       ) : (

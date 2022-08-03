@@ -6,10 +6,9 @@ import useAuth from '../../hooks/useAuth'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { likePost } from '../../store/PostsReducer'
+import { addLike } from '../../store/LikesReducer'
 
 function LikeButton({ index }) {
-
-
   const { auth } = useAuth()
   const posts = useSelector((state) => state.posts)
   const dispatch = useDispatch()
@@ -17,16 +16,18 @@ function LikeButton({ index }) {
   const [isLiked, setIsLiked] = useState(false)
 
   const nbLike = posts[index].Likes
-  const likedPost=useSelector((state)=>state.likes)
-  useEffect(()=>{
-  if (likedPost.includes(posts[index].Id)){
-    setIsLiked(true)
-  }}
-  ,[])
-  console.log(likedPost)
-  const handleClick = () => {
-    dispatch(likePost(postId, auth.accessToken,auth.userId))
+  const likedPost = useSelector((state) => state.likes)
+  useEffect(() => {
+    if (likedPost.includes(postId)) {
+      setIsLiked(true)
+    }
+  }, [likedPost])
 
+  const handleClick = () => {
+    dispatch(likePost(postId, auth.accessToken, auth.userId))
+
+    dispatch(addLike(postId))
+    
     setIsLiked(!isLiked)
   }
 

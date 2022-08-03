@@ -13,7 +13,7 @@ const Image = styled.img`
   width: 60%;
 `
 
-function TestPost({ index }) {
+function Post({ index }) {
   const { auth } = useAuth()
   const userId = auth.userId
 const { isAdmin } = auth.isAdmin
@@ -180,4 +180,4 @@ const { isAdmin } = auth.isAdmin
   )
 }
 
-export default TestPost
+export default Post

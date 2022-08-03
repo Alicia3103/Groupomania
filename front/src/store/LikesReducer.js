@@ -3,6 +3,7 @@ import { axiosPrivate } from "../api/axios"
 const initialState = []
 
 export const GET_LIKES_ACTION = 'GET_LIKES_ACTION'
+export const ADD_LIKE_ACTION = 'ADD_LIKE_ACTION'
 
 export const getLikes = (accessToken) => {
   return (dispatch) => {
@@ -18,11 +19,22 @@ export const getLikes = (accessToken) => {
       .catch((err) => console.log(err))
   }
 }
+export const addLike = (postId) => {
+  return (dispatch) => {
+    return  dispatch({ type: ADD_LIKE_ACTION, payload: postId})
+  }
+}
 
 export function LikesReducer(state = initialState, action) {
   switch (action.type) {
     case GET_LIKES_ACTION:
       return action.payload
+    case ADD_LIKE_ACTION:
+      if(state.includes(action.payload)){
+        return state.filter((likes) => likes !== action.payload)
+      }
+      console.log(action.payload)
+      return  [action.payload, ...state]
     default:
       return state
   }
