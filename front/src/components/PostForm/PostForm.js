@@ -40,7 +40,7 @@ function PostForm() {
       setContent('')
       setSelectedFile()
 
-      dispatch(GetPosts())
+      dispatch(GetPosts(auth.accessToken))
     } catch (err) {
       console.log(err)
     }

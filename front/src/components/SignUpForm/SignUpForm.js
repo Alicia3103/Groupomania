@@ -141,7 +141,7 @@ const SignUpForm = () => {
       } else if (err.response?.status === 404) {
         setErrMsg('Utilisateur non trouvé')
       } else if (err.response?.status === 409) {
-        setErrMsg('Mot de passe erroné')
+        setErrMsg('Email déjà utilisé')
       } else if (err.response?.status === 429) {
         setErrMsg("Trop d'essais, essayez dans 5 min")
       } else {

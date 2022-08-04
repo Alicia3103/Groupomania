@@ -23,7 +23,7 @@ const normalizePort = (val) => {
 	}
 	return false
 }
-const port = normalizePort(MY_PORT || '3001')
+const port = normalizePort(MY_PORT || '3080')
 
 app.set('port', port)
 

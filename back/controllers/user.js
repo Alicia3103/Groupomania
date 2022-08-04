@@ -4,8 +4,7 @@ const db = require('../database/DB')
 const secretToken = process.env.SECRET_TOKEN
 //import des modules de node
 const bcrypt = require('bcrypt')
-const dotenv = require('dotenv')
-dotenv.config()
+require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 //enregistrer un utilisateur
@@ -14,6 +13,7 @@ exports.signup = (req, res, next) => {
 	const nom = req.body.nom
 	const prenom = req.body.prenom
 
+	console.log('signup')
 	//hash et sallage du MDP grace a Bcrypt
 	bcrypt.genSalt(parseInt(process.env.SALT)).then((salt) => {
 		bcrypt
@@ -46,6 +46,7 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
 	const email = req.body.email
 	const password = req.body.password
+	console.log(req.body.email, req.body.password)
 	db.query(
 		'SELECT Id,Actif,IsAdmin,Password FROM user WHERE Email =?',
 		[email],
@@ -69,10 +70,11 @@ exports.login = (req, res, next) => {
 						{ expiresIn: '24h' }
 					)
 					db.query(
-						'UPDATE user SET RefreshToken=? WHERE Id=?',
-						[refreshToken, user.Id],
+						'UPDATE user SET RefreshToken=? WHERE Email=?',
+						[refreshToken, email],
 						function (err, result) {
 							if (err) {
+								console.log(err)
 								return res.status(404).json({ error: 'Post non modifié' })
 							}
 							res.cookie('refreshToken', refreshToken, {
