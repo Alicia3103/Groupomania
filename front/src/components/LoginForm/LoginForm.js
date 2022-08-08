@@ -9,7 +9,7 @@ import colors from '../../utils/styles/colors'
 
 const LogInContainer = styled.div`
   background-color: ${colors.secondary};
-  height: 400px;
+  height: 200px;
   box-shadow: 10px 15px 16px 6px rgba(0, 0, 0, 0.51);
   border-radius: 0 10px 10px 10px;
   padding: 40px 25px 40px 25px;
@@ -21,17 +21,20 @@ const LogInFormContainer = styled.form`
   align-items: center;
   height: 100%;
 `
+const Label=styled.label`
+font-size:16px
+`
 const Input = styled.input`
   margin: 10px;
   padding: 5px;
-  border-radius: 15px;
+  border-radius: 6px;
   border-color: ${colors.secondary};
 `
 const InputButton = styled.input`
   margin: 10px;
   padding: 5px;
   background-color: ${colors.darkerSecondary};
-  border-radius: 15px;
+  border-radius: 6px;
   border-color: ${colors.darkerSecondary};
 `
 const LOGIN_URL = '/api/auth/login'
@@ -103,7 +106,8 @@ const LoginForm = () => {
         {errMsg}
       </p>
       <LogInFormContainer onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
+        
+        <Label htmlFor="email">Email</Label>
         <Input
           type="email"
           id="email"
@@ -112,7 +116,7 @@ const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           value={email}
         />
-        <label htmlFor="password">Password</label>
+        <Label htmlFor="password">Password</Label>
         <Input
           type="password"
           id="password"

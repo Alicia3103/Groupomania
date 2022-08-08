@@ -234,7 +234,7 @@ exports.likePost = (req, res, next) => {
 exports.getAllUserPost = (req, res, next) => {
 	const userId = req.auth.userId
 	db.query(
-		'SELECT * FROM post WHERE UserId =? ORDER BY CreateTime DESC',
+		'SELECT post.Id,Title,Content,ImageUrl,CreateTime,UserId,(SELECT count(*) FROM userliked WHERE post.Id=userliked.PostId) AS Likes,user.Nom,user.Prenom FROM post LEFT JOIN user On post.UserId=user.Id WHERE UserId=? ORDER BY CreateTime DESC',
 		[userId],
 		function (err, result) {
 			if (err) {

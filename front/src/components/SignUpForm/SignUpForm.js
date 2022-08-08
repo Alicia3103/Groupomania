@@ -25,23 +25,27 @@ const SignUpFormContainer = styled.form`
   align-items: center;
   height: 100%;
 `
+const Label = styled.label`
+  font-size: 16px;
+`
 const Input = styled.input`
   margin: 10px;
   padding: 5px;
-  border-radius: 15px;
+  border-radius: 6px;
   border-color: ${colors.secondary};
 `
 const InputButton = styled.input`
   margin: 10px;
   padding: 5px;
   background-color: ${colors.darkerSecondary};
-  border-radius: 15px;
+  border-radius: 6px;
   border-color: ${colors.darkerSecondary};
 `
 const NOM_REGEX =
   /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ-]+$/
-const EMAIL_REGEX = /^\w+([.-_]?\w+)*@\w+([.-_]?\w+)*(.\w{2,4})+$/
-const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+const EMAIL_REGEX = /^\w+([._-]?\w+)*@\w+([.-_]?\w+)*(.\w{2,4})+$/
+const PASSWORD_REGEX =
+  /^(?=.*[A-z])(?=.*[a-z])(?=.*[A-Z])(?!.*[ =])(?=.*[0-9])\S{8,30}$/
 
 const REGISTER_URL = '/api/auth/signup'
 const LOGIN_URL = '/api/auth/login'
@@ -158,13 +162,13 @@ const SignUpForm = () => {
       </p>
 
       <SignUpFormContainer onSubmit={handleSubmit}>
-        <label htmlFor="Nom">
+        <Label htmlFor="Nom">
           Nom
           <span>{validNom ? <FontAwesomeIcon icon={faCheck} /> : null}</span>
           <span>
             {validNom || !nom ? null : <FontAwesomeIcon icon={faTimes} />}
           </span>
-        </label>
+        </Label>
         <Input
           type="text"
           id="Nom"
@@ -182,7 +186,7 @@ const SignUpForm = () => {
           </p>
         ) : null}
 
-        <label htmlFor="Prenom">Prenom</label>
+        <Label htmlFor="Prenom">Prenom</Label>
         <span>{validPrenom ? <FontAwesomeIcon icon={faCheck} /> : null}</span>
         <span>
           {validPrenom || !prenom ? null : <FontAwesomeIcon icon={faTimes} />}
@@ -204,7 +208,7 @@ const SignUpForm = () => {
           </p>
         ) : null}
 
-        <label htmlFor="email">Email</label>
+        <Label htmlFor="email">Email</Label>
         <span>{validEmail ? <FontAwesomeIcon icon={faCheck} /> : null}</span>
         <span>
           {validEmail || !email ? null : <FontAwesomeIcon icon={faTimes} />}
@@ -226,7 +230,7 @@ const SignUpForm = () => {
           </p>
         ) : null}
 
-        <label htmlFor="password">Password</label>
+        <Label htmlFor="password">Password</Label>
         <span>{validPassword ? <FontAwesomeIcon icon={faCheck} /> : null}</span>
         <span>
           {validPassword || !password ? null : (

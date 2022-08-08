@@ -33,7 +33,15 @@ const Connect = styled.div`
   border-radius: 10px;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
+`
+const PVisite=styled.p`
+font-size:28px;
+font-weight: bold;
+
+`
+const ReConnect= styled.p`
+color: ${colors.darkerSecondary};
 `
 
 const LogOut = () => {
@@ -42,9 +50,9 @@ const LogOut = () => {
       <Header />
       <LogOutContainer>
         <Connect>
-          <p>Merci de votre visite</p>
+          <PVisite>Merci de votre visite</PVisite>
           <Link to={'/connexion'}>
-            Vous voulez déjà revenir? Connectez-vous ici
+            <ReConnect>Vous voulez déjà revenir? Connectez-vous ici</ReConnect>
           </Link>
         </Connect>
       </LogOutContainer>

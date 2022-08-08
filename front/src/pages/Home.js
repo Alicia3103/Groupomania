@@ -13,11 +13,10 @@ import OldPostsContainer from '../components/OldPostContainer/OldPostsContainer'
 const HomePage = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-image: url(${backgroundImage});
-  background-position: center;
-  background-repeat: no-repeat;
+  background: url(${backgroundImage})no-repeat center center fixed;
   background-size: cover;
+  height: 100%;
+  overflow: hidden;
 `
 
 const HomePageContainer = styled.div`
@@ -25,6 +24,7 @@ const HomePageContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100vw;
+ 
 `
 const PostsContainer = styled.div`
   display: flex;
@@ -35,10 +35,13 @@ const PostsContainer = styled.div`
 `
 
 const NewPostContainer = styled.div`
-  height: 300px;
-  width: 100%;
-  background-color: ${colors.secondary};
-  border-radius: 10px;
+min-height: 150px;
+width: 100%;
+background-color: ${colors.secondary};
+border-radius: 10px;
+display:flex;
+justify-content: center;
+margin:10px
 `
 
 const Home = () => {

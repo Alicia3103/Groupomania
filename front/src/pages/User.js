@@ -7,13 +7,12 @@ import styled from 'styled-components'
 import backgroundImage from './groupomaniafond.jpg'
 
 const UserPage = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-image: url(${backgroundImage});
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+display: flex;
+flex-direction: column;
+background: url(${backgroundImage})no-repeat center center fixed;
+background-size: cover;
+height: 100%;
+overflow: hidden;
 `
 const UserPageContainer = styled.section`
   display: flex;

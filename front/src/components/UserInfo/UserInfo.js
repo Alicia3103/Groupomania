@@ -3,15 +3,47 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useAuth from '../../hooks/useAuth'
-import useInterceptorsAxiosPrivate from '../../hooks/useInterceptorsAxiosPrivate'
+
 import { GetUserInfos, UnactiveUser } from '../../store/UserReducer'
 import colors from '../../utils/styles/colors'
 
 const UserInfoContainer = styled.div`
-  height: 300px;
+  min-height: 150px;
   width: 100%;
   background-color: ${colors.secondary};
   border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+`
+const UserInfos = styled.div`
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  border: 2px solid ${colors.darkerSecondary};
+`
+const PInfos = styled.p`
+  font-weight: bold;
+`
+const PMail = styled.p`
+  font-style: italic;
+  margin: 10px;
+`
+const DeleteButton = styled.button`
+color:${colors.secondary};
+margin-left:8px
+box-shadow: 0px 10px 14px -7px #276873;
+font-size:14px;
+background-color:${colors.primary};
+border-radius:6px;
+border:none;
+padding:0 10px ;
+height:22px;
+
 `
 const UserInfo = () => {
   const { auth } = useAuth()
@@ -37,18 +69,16 @@ const UserInfo = () => {
 
   return (
     <UserInfoContainer>
-      <div>
-        <div className="userInfo">
-          <p className="nomPrenom">
-            {infoUser?.Nom} {infoUser?.Prenom}
-          </p>
-          <p className="mail">{infoUser?.Email}</p>
-        </div>
-      </div>
+      <UserInfos>
+        <PInfos className="nomPrenom">
+          {infoUser?.Nom} {infoUser?.Prenom}
+        </PInfos>
+        <PMail className="mail">{infoUser?.Email}</PMail>
 
-      <button onClick={handleClick} className="desactiverCompte">
-        Désactiver le compte
-      </button>
+        <DeleteButton onClick={handleClick} className="desactiverCompte">
+          Désactiver le compte
+        </DeleteButton>
+      </UserInfos>
     </UserInfoContainer>
   )
 }

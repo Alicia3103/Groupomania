@@ -6,10 +6,13 @@ import colors from '../../utils/styles/colors'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { GetUserPosts } from '../../store/PostsReducer'
+import { GetLikes } from '../../store/LikesReducer'
+
 import Post from '../Post/Post'
 import useAuth from '../../hooks/useAuth'
 
 const UserPostsContainers = styled.div`
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -18,10 +21,17 @@ const UserPostsContainers = styled.div`
   background-color: ${colors.secondary};
   border-radius: 10px;
 `
+const Posts = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
+  background-color: ${colors.secondary};
+`
 
 const AllUserPostsContainer = () => {
   const { auth } = useAuth()
-  const [errMsg, setErrMsg] = useState('')
 
   const [loadPost, setLoadPost] = useState(true)
   const userPosts = useSelector((state) => state.posts)
@@ -39,6 +49,7 @@ const AllUserPostsContainer = () => {
   useEffect(() => {
     if (loadPost) {
       dispatch(GetUserPosts(auth.accessToken))
+      dispatch(GetLikes(auth.accessToken))
       setLoadPost(false)
     }
   }, [dispatch, loadPost])
@@ -46,11 +57,11 @@ const AllUserPostsContainer = () => {
   return (
     <UserPostsContainers>
       {!isEmpty(userPosts[0]) ? (
-        <div>
+        <Posts>
           {userPosts.map((post, index) => (
             <Post post={post} index={index} key={index} />
           ))}
-        </div>
+        </Posts>
       ) : (
         <p>Pas de posts à afficher</p>
       )}

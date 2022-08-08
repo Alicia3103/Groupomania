@@ -4,6 +4,8 @@ const cors = require('cors')
 const helmet = require('helmet')
 const path = require('path')
 const app = express()
+const dotenv = require('dotenv')
+dotenv.config()
 
 //définition des routes
 const userRoutes = require('./routes/user')
@@ -21,7 +23,7 @@ app.use(
 app.use(
 	cors({
 		credentials: true,
-		origin: 'http://localhost:3000',
+		origin: process.env.FRONT_PORT,
 		optionsSuccessStatus: 200,
 	})
 )

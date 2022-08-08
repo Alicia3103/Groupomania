@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const HeaderContainer = styled.header`
   display: flex;
   justify-content: center;
-  height: 100px;
+  height: 50px;
   width: 100vw;
   background: rgb(255, 145, 145);
   background: linear-gradient(

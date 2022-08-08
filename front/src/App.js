@@ -10,22 +10,14 @@ import RequireAuth from './components/RequireAuth/RequireAuth'
 import PersistLogin from './components/PersistLogin'
 import Layout from './components/Layout'
 import LogOut from './pages/LogOut'
+import './utils/styles/index.css'
 
-const GlobalStyle = createGlobalStyle`
-    body {
-        font-family: 'Trebuchet MS', Helvetica, sans-serif;
-		font-size:14px;
-        box-sizing: border-box;
-        margin:0;
-        padding:0;
-    }
-`
 
 const App = () => {
   const interceptorsAxiosPrivate = useInterceptorsAxiosPrivate()
   return (
     <BrowserRouter>
-      <GlobalStyle />
+    
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/connexion" element={<Connexion />} />

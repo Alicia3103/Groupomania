@@ -10,7 +10,7 @@ import { GetLikes } from '../../store/LikesReducer'
 import Post from '../Post/Post'
 import useAuth from '../../hooks/useAuth'
 
-const OldPostsContainers = styled.div`
+const ThreadContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -18,6 +18,15 @@ const OldPostsContainers = styled.div`
   width: 100%;
   background-color: ${colors.secondary};
   border-radius: 10px;
+  margin-bottom:10px;
+`
+const Posts = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
+  background-color: ${colors.secondary};
 `
 
 const OldPostsContainer = () => {
@@ -46,17 +55,17 @@ const OldPostsContainer = () => {
   }, [dispatch, loadPost])
 
   return (
-    <OldPostsContainers>
+    <ThreadContainer>
       {!isEmpty(reduxPosts[0]) ? (
-        <div>
+        <Posts>
           {reduxPosts.map((post, index) => (
-            <Post post={post} index={index} key={index} />
+            <Post index={index} key={index} />
           ))}
-        </div>
+        </Posts>
       ) : (
         <p>Pas de posts à afficher</p>
       )}
-    </OldPostsContainers>
+    </ThreadContainer>
   )
 }
 

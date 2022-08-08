@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -7,6 +8,11 @@ import useAuth from '../../hooks/useAuth'
 import { useDispatch, useSelector } from 'react-redux'
 import { LikePost } from '../../store/PostsReducer'
 import { AddLike } from '../../store/LikesReducer'
+
+const LikeContainer = styled.p`
+  font-size: 16px;
+  padding:3px;
+`
 
 function LikeButton({ index }) {
   const { auth } = useAuth()
@@ -32,14 +38,16 @@ function LikeButton({ index }) {
   }
 
   return (
-    <div>
-      <FontAwesomeIcon
-        onClick={handleClick}
-        icon={faThumbsUp}
-        style={{ color: isLiked ? 'green' : 'grey' }}
-      />
-      <div>{nbLike}</div>
-    </div>
+    <LikeContainer>
+      {nbLike}
+       
+        <FontAwesomeIcon
+          onClick={handleClick}
+          icon={faThumbsUp}
+          style={{ color: isLiked ? 'green' : 'grey' }}
+        />
+      
+    </LikeContainer>
   )
 }
 
