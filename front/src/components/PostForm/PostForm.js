@@ -20,26 +20,38 @@ const PostFormContent = styled.form`
   border-radius:10px;
   border:2px solid ${colors.darkerSecondary};
   margin:10px;
+  padding:10px
 `
 const PostFormImage = styled.img`
   align-self: center;
   max-width: 80%;
   max-height:100px
 `
+const TitleInput=styled.input`
+width:60%;
+margin:5px
+`
+const ContentInput=styled.textarea`
+width:80%;
+height:50%;
+margin:5px
+`
 
 const SendButton = styled.button`
 color:${colors.secondary};
 margin-left:8px
 box-shadow: 0px 10px 14px -7px #276873;
-font-size:14px;
+font-size:16px;
 background-color:${colors.darkerSecondary};
 border-radius:6px;
 border:none;
-width:22px;
-height:22px;
+width:32px;
+min-height:28px;
+align-self: flex-end;
+margin: 2px  10% 2px 2px
 
 `
-const AddImageButton = styled.button`
+const Button = styled.button`
 color:${colors.secondary};
 margin-left:8px
 box-shadow: 0px 10px 14px -7px #276873;
@@ -48,19 +60,11 @@ background-color:${colors.darkerSecondary};
 border-radius:6px;
 border:none;
 width:22px;
-height:22px;
+min-height:22px;
+margin:2px
+
 `
-const DeleteImageButton = styled.button`
-color:${colors.secondary};
-margin-left:8px
-box-shadow: 0px 10px 14px -7px #276873;
-font-size:14px;
-background-color:${colors.darkerSecondary};
-border-radius:6px;
-border:none;
-width:22px;
-height:22px;
-`
+
 
 function PostForm() {
   const { auth } = useAuth()
@@ -108,7 +112,7 @@ function PostForm() {
    
       <PostFormContent onSubmit={handleSubmit}>
         <label htmlFor="title">Titre</label>
-        <input
+        <TitleInput
           type="text"
           id="title"
           value={title}
@@ -116,7 +120,7 @@ function PostForm() {
           onChange={(e) => setTitle(e.target.value)}
         />
         <label htmlFor="content">Contenu</label>
-        <textarea
+        <ContentInput
           id="content"
           value={content}
           required
@@ -133,24 +137,24 @@ function PostForm() {
                 fileInputRef.current.click()
               }}
             />
-            <DeleteImageButton
+            <Button
               onClick={() => {
                 setSelectedFile()
                 setPreview('')
               }}
             >
               <FontAwesomeIcon icon={faXmark} />
-            </DeleteImageButton>
+            </Button>
           </div>
         ) : (
-          <AddImageButton
+          <Button
             onClick={(e) => {
               e.preventDefault()
               fileInputRef.current.click()
             }}
           >
             <FontAwesomeIcon icon={faImage} />
-          </AddImageButton>
+          </Button>
         )}
         <input
           type="file"

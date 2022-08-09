@@ -34,7 +34,6 @@ db.query(
     Actif TINYINT NOT NULL DEFAULT 1,
     CreatedTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UpdateTime TIMESTAMP DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    UnactiveTime TIMESTAMP DEFAULT NULL,
     RefreshToken VARCHAR(255),
     PRIMARY KEY (Id),
     UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
@@ -74,7 +73,7 @@ db.query(
 	}
 )
 db.query(
-	`INSERT INTO user (Email,Password,Nom,Prenom,isAdmin,Actif) VALUES('admin.test@test.fr' , '$2b$10$.v2U89XqmFpA8GCGkBIe..4o/x4fAY.xt8FZ8wJ8OhzCaCFsLE8Ze','ADMIN','admin',1,1)`,
+	`INSERT INTO user (Email,Password,Nom,Prenom,isAdmin,Actif) VALUES('admin.test@test.fr' , '$2b$10$FC.ULldyBTAj3gbls6vHdeQgvYQ13re9.SSmNg7hFJJkOShInxgdC','ADMIN','admin',1,1)`,
 	function (err, result) {
 		if (err) {
 			console.log('Utilisateur Admin déjà crée !')

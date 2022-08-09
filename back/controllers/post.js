@@ -230,7 +230,7 @@ exports.likePost = (req, res, next) => {
 		}
 	)
 }
-// fonction affichage de tous les posts
+// fonction affichage de tous les posts du user
 exports.getAllUserPost = (req, res, next) => {
 	const userId = req.auth.userId
 	db.query(

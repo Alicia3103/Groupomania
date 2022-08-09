@@ -76,7 +76,7 @@ const UserInfo = () => {
         <PMail className="mail">{infoUser?.Email}</PMail>
 
         <DeleteButton onClick={handleClick} className="desactiverCompte">
-          Désactiver le compte
+          Supprimer le compte
         </DeleteButton>
       </UserInfos>
     </UserInfoContainer>

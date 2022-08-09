@@ -13,29 +13,27 @@ exports.refreshedToken = (req, res) => {
 	}
 
 	db.query(
-		'SELECT Actif FROM user WHERE RefreshToken =? ',
+		'SELECT Id FROM user WHERE RefreshToken =? ',
 		[refreshToken],
 		function (err, result) {
 			if (err || !result.length) {
 				return res
 					.status(404)
 					.json({ error: 'aucun refreshToken valide trouvé' })
-			} else if (result[0].Actif === 0) {
-				return res.status(403).json({ error: 'Compte désactivé' })
 			}
+			
+			const refreshId = result[0].Id
 
 			//Vérification du token
 			jwt.verify(
 				refreshToken,
 				process.env.REFRESH_SECRET_TOKEN,
 				(err, user) => {
-					if (err) {
+					if (err || user.userId !== refreshId) {
 						return res.status(401).json({ error: 'refreshToken invalide' })
 					}
 					delete user.iat
 					delete user.exp
-					console.log('user')
-					console.log(user)
 
 					const accessToken = jwt.sign(
 						{ userId: user.userId, isAdmin: user.isAdmin },

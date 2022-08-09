@@ -26,6 +26,7 @@ exports.signup = (req, res, next) => {
 					function (err, result) {
 						if (err) {
 							if (err.errno === 1062) {
+								
 								return res.status(409).json({ error: 'email déjà utilisé' })
 							}
 							return res
@@ -152,7 +153,7 @@ exports.unactiveAccount = (req, res) => {
 	const id = req.auth.userId
 
 	db.query(
-		'UPDATE user SET Actif=0 , UnactiveTime = CURRENT_TIMESTAMP WHERE Id =?',
+		'DELETE FROM user  WHERE Id =?',
 		[id],
 		function (err, result) {
 			if (err || result.affectedRows === 0) {

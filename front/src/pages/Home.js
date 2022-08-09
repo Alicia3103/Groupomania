@@ -15,7 +15,7 @@ const HomePage = styled.div`
   flex-direction: column;
   background: url(${backgroundImage})no-repeat center center fixed;
   background-size: cover;
-  height: 100%;
+  min-height: 100vh;
   overflow: hidden;
 `
 

@@ -10,7 +10,9 @@ import RequireAuth from './components/RequireAuth/RequireAuth'
 import PersistLogin from './components/PersistLogin'
 import Layout from './components/Layout'
 import LogOut from './pages/LogOut'
+import './utils/styles/normalize.css'
 import './utils/styles/index.css'
+
 
 
 const App = () => {

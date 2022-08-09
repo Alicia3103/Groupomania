@@ -4,7 +4,11 @@ import useAuth from '../../hooks/useAuth'
 import LikeButton from './LikeButton'
 import ModifyButton from './ModifyButton'
 import DeleteButton from './DeleteButton'
-import { faImage, faXmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPaperPlane,
+  faImage,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -50,15 +54,29 @@ const PostImage = styled.img`
 const EditPostContent = styled.form`
   display: flex;
   flex-direction: column;
-  width: 80%;
   align-items: center;
+  width: 100%;
+  border: 2px solid ${colors.darkerSecondary};
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
 `
 const EditPostImage = styled.img`
   align-self: center;
   max-width: 80%;
   max-height: 100px;
 `
-const DeleteImageButtonContainer = styled.button`
+const TitleInput = styled.input`
+  width: 60%;
+  margin: 5px;
+`
+const ContentInput = styled.textarea`
+  width: 80%;
+  height: 50%;
+  margin: 5px;
+`
+
+const ButtonContainer = styled.button`
 color:${colors.secondary};
 margin-left:8px
 box-shadow: 0px 10px 14px -7px #276873;
@@ -69,16 +87,19 @@ border:none;
 width:22px;
 height:22px;
 `
-const AddImageButtonContainer = styled.button`
+const SendButton = styled.button`
 color:${colors.secondary};
 margin-left:8px
 box-shadow: 0px 10px 14px -7px #276873;
-font-size:14px;
+font-size:16px;
 background-color:${colors.darkerSecondary};
 border-radius:6px;
 border:none;
-width:22px;
-height:22px;
+width:32px;
+min-height:28px;
+align-self: flex-end;
+margin: 2px  10% 2px 2px
+
 `
 
 function Post({ index }) {
@@ -98,6 +119,7 @@ function Post({ index }) {
   const postImageUrl = post.ImageUrl
 
   const fileInputRef = useRef()
+  const submitInputRef = useRef()
   const [preview, setPreview] = useState('')
 
   const [isEditing, setIsEditing] = useState(false)
@@ -183,9 +205,18 @@ function Post({ index }) {
         </PostContent>
       ) : (
         <EditPostContent onSubmit={handleEdit}>
-          <input
+          <label htmlFor="title">Titre</label>
+          <TitleInput
+            type="text"
+            id="title"
             defaultValue={postTitle}
             onChange={(e) => setEditingTitle(e.target.value)}
+          />
+          <label htmlFor="content">Contenu</label>
+          <ContentInput
+            id="content"
+            defaultValue={postContent}
+            onChange={(e) => setEditingContent(e.target.value)}
           />
 
           {preview ? (
@@ -199,17 +230,17 @@ function Post({ index }) {
                   fileInputRef.current.click()
                 }}
               />
-              <DeleteImageButtonContainer
+              <ButtonContainer
                 onClick={() => {
                   setDeleteImage(true)
                   setPreview('')
                 }}
               >
                 <FontAwesomeIcon icon={faXmark} />
-              </DeleteImageButtonContainer>
+              </ButtonContainer>
             </div>
           ) : (
-            <AddImageButtonContainer
+            <ButtonContainer
               onClick={(e) => {
                 e.preventDefault()
                 setDeleteImage(false)
@@ -217,7 +248,7 @@ function Post({ index }) {
               }}
             >
               <FontAwesomeIcon icon={faImage} />
-            </AddImageButtonContainer>
+            </ButtonContainer>
           )}
           <input
             type="file"
@@ -226,11 +257,22 @@ function Post({ index }) {
             ref={fileInputRef}
             onChange={(e) => setEditingSelectedFile(e.target.files[0])}
           />
-          <textarea
-            defaultValue={postContent}
-            onChange={(e) => setEditingContent(e.target.value)}
+
+          <input
+            className="send"
+            type="submit"
+            value="Envoyer"
+            ref={submitInputRef}
+            style={{ display: 'none' }}
           />
-          <input type="submit" value="Envoyer" />
+          <SendButton
+            onClick={(e) => {
+              e.preventDefault()
+              submitInputRef.current.click()
+            }}
+          >
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </SendButton>
         </EditPostContent>
       )}
     </PostContainer>

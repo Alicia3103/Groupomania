@@ -13,10 +13,17 @@ body {
 }
 
 p {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 a {
   color: inherit;
   text-decoration: unset;
+}
+button,
+input,
+textarea {
+  font-size: 14px;
+  border: unset;
+  border-radius: 5px;
 }

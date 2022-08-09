@@ -13,6 +13,11 @@ const LikeContainer = styled.p`
   font-size: 16px;
   padding:3px;
 `
+const NbLikesP=styled.span`
+font-size: 14px;
+margin-right:4px;
+
+`
 
 function LikeButton({ index }) {
   const { auth } = useAuth()
@@ -39,7 +44,7 @@ function LikeButton({ index }) {
 
   return (
     <LikeContainer>
-      {nbLike}
+      <NbLikesP>{nbLike}</NbLikesP>
        
         <FontAwesomeIcon
           onClick={handleClick}
