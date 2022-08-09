@@ -9,7 +9,7 @@ const MIME_TYPES = {
 
 //création de l'objet de configuration de Multer
 const storage = multer.diskStorage({
-	//où eregistrer les images
+	//où enregistrer les images
 	destination: (req, file, callback) => {
 		callback(null, 'images')
 	},

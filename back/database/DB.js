@@ -12,6 +12,7 @@ db.connect(function (err) {
 	if (err) throw err
 	console.log('Connecté à la base de données MySQL!')
 })
+//création de la DB si elle n'existe pas déjà
 db.query(
 	'CREATE DATABASE IF NOT EXISTS ' + process.env.DB_DATABASE,
 	function (err, result) {
@@ -19,10 +20,12 @@ db.query(
 		console.log('Base de données crée !')
 	}
 )
+//utilisation de la DB groupomania
 db.query('USE ' + process.env.DB_DATABASE, function (err, result) {
 	if (err) throw err
 	console.log('Base de données sélectionné !')
 })
+//création des tables nécessaires
 db.query(
 	`CREATE TABLE IF NOT EXISTS user (
     Id INT NOT NULL AUTO_INCREMENT, 
@@ -72,6 +75,7 @@ db.query(
 		console.log('Table userLiked crée !')
 	}
 )
+//création de l'utilisateur admin
 db.query(
 	`INSERT INTO user (Email,Password,Nom,Prenom,isAdmin,Actif) VALUES('admin.test@test.fr' , '$2b$10$FC.ULldyBTAj3gbls6vHdeQgvYQ13re9.SSmNg7hFJJkOShInxgdC','ADMIN','admin',1,1)`,
 	function (err, result) {

@@ -4,9 +4,9 @@ import Header from '../components/Header/Header'
 import SignUpForm from '../components/SignUpForm/SignUpForm'
 import styled from 'styled-components'
 import colors from '../utils/styles/colors'
-import backgroundImage from './groupomaniafond.jpg'
+import backgroundImage from '../../src/images/groupomaniafond.jpg'
 
-const ConnexionPage = styled.section`
+const ConnexionPage = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,7 +39,7 @@ const Button = styled.button`
   border: none;
   font-size: 16px;
   font-weight: bold;
-  padding:0 10px;
+  padding: 0 10px;
   height: 100%;
   border-radius: 10px 10px 0 0;
 `

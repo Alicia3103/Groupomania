@@ -10,6 +10,7 @@ export const LIKE_POST_ACTION = 'LIKE_POST_ACTION'
 
 export const GET_USER_POST_ACTION = 'GET_USER_POST_ACTION'
 
+// liker et enlever le like d'un post
 export function LikePost(postId, accessToken, userId) {
   return (dispatch) => {
     return axiosPrivate
@@ -21,7 +22,6 @@ export function LikePost(postId, accessToken, userId) {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data.nbLike)
         const post = {
           id: postId,
           Likes: res.data.nbLike,
@@ -33,6 +33,7 @@ export function LikePost(postId, accessToken, userId) {
   }
 }
 
+//modifier un post
 export function ModifyPost(editPost, editPostData, postId, accessToken) {
   return (dispatch) => {
     return axiosPrivate
@@ -56,6 +57,7 @@ export function ModifyPost(editPost, editPostData, postId, accessToken) {
       .catch((err) => console.log(err))
   }
 }
+//suppression du post
 export function DeletePost(postId, accessToken) {
   return (dispatch) => {
     return axiosPrivate
@@ -72,6 +74,8 @@ export function DeletePost(postId, accessToken) {
       .catch((err) => console.log(err))
   }
 }
+
+//création d'un post
 
 export function AddPosts(data, accessToken) {
   return (dispatch) => {
@@ -90,6 +94,7 @@ export function AddPosts(data, accessToken) {
   }
 }
 
+//récupération des posts d'un utilisateur
 export function GetUserPosts(accessToken) {
   return (dispatch) => {
     return axiosPrivate
@@ -104,6 +109,8 @@ export function GetUserPosts(accessToken) {
       .catch((err) => console.log(err))
   }
 }
+
+//récupération des posts
 export function GetPosts(accessToken) {
   return (dispatch) => {
     return axiosPrivate
@@ -119,6 +126,7 @@ export function GetPosts(accessToken) {
   }
 }
 
+//reducer des posts
 export function PostsReducer(state = initialState, action) {
   switch (action.type) {
     case LIKE_POST_ACTION:

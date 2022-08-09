@@ -3,7 +3,7 @@ import Header from '../components/Header/Header'
 
 import styled from 'styled-components'
 import colors from '../utils/styles/colors'
-import backgroundImage from './groupomaniafond.jpg'
+import backgroundImage from '../../src/images/groupomaniafond.jpg'
 
 import { Link } from 'react-router-dom'
 
@@ -35,13 +35,12 @@ const Connect = styled.div`
   align-items: center;
   justify-content: space-evenly;
 `
-const PVisite=styled.p`
-font-size:28px;
-font-weight: bold;
-
+const PVisite = styled.p`
+  font-size: 28px;
+  font-weight: bold;
 `
-const ReConnect= styled.p`
-color: ${colors.darkerSecondary};
+const ReConnect = styled.p`
+  color: ${colors.darkerSecondary};
 `
 
 const LogOut = () => {

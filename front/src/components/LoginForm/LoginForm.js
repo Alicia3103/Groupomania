@@ -21,8 +21,8 @@ const LogInFormContainer = styled.form`
   align-items: center;
   height: 100%;
 `
-const Label=styled.label`
-font-size:16px
+const Label = styled.label`
+  font-size: 16px;
 `
 const Input = styled.input`
   margin: 10px;
@@ -65,6 +65,7 @@ const LoginForm = () => {
     e.preventDefault()
 
     try {
+      //appel api pour fonction login
       const response = await axios.post(
         LOGIN_URL,
         JSON.stringify({ email, password }),
@@ -81,6 +82,7 @@ const LoginForm = () => {
       setEmail('')
       setPassword('')
 
+      //renvoi à la dernière page du site visité ou bien pag d'accueil
       navigate(from, { replace: true })
     } catch (err) {
       if (!err?.response) {
@@ -106,7 +108,6 @@ const LoginForm = () => {
         {errMsg}
       </p>
       <LogInFormContainer onSubmit={handleSubmit}>
-        
         <Label htmlFor="email">Email</Label>
         <Input
           type="email"

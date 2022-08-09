@@ -1,5 +1,5 @@
 import React from 'react'
-import GroupomaniaLogo from '../images/icon-left-font-monochrome-white.png'
+import GroupomaniaLogo from '../../images/icon-left-font-monochrome-white.png'
 import styled from 'styled-components'
 const HeaderContainer = styled.header`
   display: flex;

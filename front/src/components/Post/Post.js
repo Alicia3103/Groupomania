@@ -129,15 +129,19 @@ function Post({ index }) {
   const [editingSelectedFile, setEditingSelectedFile] = useState()
   const [deleteImage, setDeleteImage] = useState(false)
 
+  //si edit du post affichage du preview de l'image et préremplissage avec le contenu des champs
   useEffect(() => {
-    if (isEditing && postImageUrl) console.log('postImageUrl', postImageUrl)
-    setPreview(postImageUrl)
+    if (isEditing && postImageUrl) {
+      setPreview(postImageUrl)
+    }
+
     if (isEditing) {
       setEditingTitle(postTitle)
       setEditingContent(postContent)
     }
   }, [isEditing, postImageUrl])
 
+  //affichage en direct de l'image choisit
   useEffect(() => {
     if (editingSelectedFile) {
       const reader = new FileReader()
@@ -160,6 +164,7 @@ function Post({ index }) {
       deleteImage: deleteImage,
     }
 
+    //ajout des contenu de l'edition dans un formdata puis appel de la fonction modifiaction du post
     const editPostData = new FormData()
 
     editPostData.set('post', JSON.stringify(editPost))
@@ -172,6 +177,7 @@ function Post({ index }) {
 
   return (
     <PostContainer>
+      {/*affichage du post si pas en cours d'edition sinon affichage du formulaire de modification */}
       {!isEditing ? (
         <PostContent className="post" id={post.Id}>
           <PostTextTitle className="post_title">{postTitle}</PostTextTitle>
@@ -250,6 +256,7 @@ function Post({ index }) {
               <FontAwesomeIcon icon={faImage} />
             </ButtonContainer>
           )}
+
           <input
             type="file"
             accept=".jpg, .jpeg, .png"
@@ -257,7 +264,6 @@ function Post({ index }) {
             ref={fileInputRef}
             onChange={(e) => setEditingSelectedFile(e.target.files[0])}
           />
-
           <input
             className="send"
             type="submit"

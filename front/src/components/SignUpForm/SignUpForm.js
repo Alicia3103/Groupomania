@@ -41,6 +41,8 @@ const InputButton = styled.input`
   border-radius: 6px;
   border-color: ${colors.darkerSecondary};
 `
+//définition des différents regex pour les champs d'inscription
+
 const NOM_REGEX =
   /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ-]+$/
 const EMAIL_REGEX = /^\w+([._-]?\w+)*@\w+([.-_]?\w+)*(.\w{2,4})+$/
@@ -54,6 +56,7 @@ const SignUpForm = () => {
   const userRef = useRef()
   const errRef = useRef()
 
+  //validation des champs
   const [nom, setNom] = useState('')
   const [validNom, setValidNom] = useState(false)
   const [nomFocus, setNomFocus] = useState(false)
@@ -80,6 +83,7 @@ const SignUpForm = () => {
     userRef.current.focus()
   }, [])
 
+  //validation des champs
   useEffect(() => {
     setValidNom(NOM_REGEX.test(nom))
   }, [nom])
@@ -105,6 +109,7 @@ const SignUpForm = () => {
     const vEmail = EMAIL_REGEX.test(email)
     const vPassword = PASSWORD_REGEX.test(password)
 
+    //si regex valid, envois des informations au back
     if (!vNom || !vPrenom || !vEmail || !vPassword) {
       setErrMsg('Informations non valide')
       return
@@ -118,6 +123,7 @@ const SignUpForm = () => {
           withCredentials: true,
         }
       )
+      //login suite à inscription validée
       const response = await axios.post(
         LOGIN_URL,
         JSON.stringify({ email, password }),
@@ -129,11 +135,16 @@ const SignUpForm = () => {
       const accessToken = response?.data?.token
       const userId = response?.data?.userId
       const isAdmin = response?.data?.isAdmin
+
+      //definition du context auth avec les informations de connexion (userId, accessToken et admin)
       setAuth({ userId, accessToken, isAdmin })
+
       setEmail('')
       setPassword('')
       setPrenom('')
       setNom('')
+
+      //redirection vers la page d'accueil
       navigate('/')
     } catch (err) {
       if (!err?.response) {

@@ -3,14 +3,15 @@ import useAuth from './useAuth'
 
 const useRefreshToken = () => {
   const { setAuth } = useAuth()
-
+  //récupération d'un nouvel accessToken valide
   const refresh = async () => {
     const response = await axios.get('/api/refreshToken', {
       withCredentials: true,
     })
-    console.log('rezponse', response)
+
     const accessToken = response.data.token
 
+    //ajout des infos (userId, accessToken et is admin) dans le auth context
     setAuth({
       userId: response.data.userId,
       accessToken,

@@ -7,6 +7,8 @@ const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true)
   const { auth } = useAuth()
   const { setAuth } = useAuth()
+
+  //vérification du refreshToken dans le cookiesecurisé et récupération d'un accessToken valide
   useEffect(() => {
     const verifyRefreshToken = async () => {
       try {
@@ -30,7 +32,7 @@ const PersistLogin = () => {
     !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false)
   }, [])
 
-  return <>{isLoading ? <p>Loading</p> : <Outlet />}</>
+  return <>{isLoading ? <div>Loading ... </div> : <Outlet />}</>
 }
 
 export default PersistLogin

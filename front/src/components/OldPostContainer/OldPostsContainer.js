@@ -9,7 +9,7 @@ import { GetPosts } from '../../store/PostsReducer'
 import { GetLikes } from '../../store/LikesReducer'
 import Post from '../Post/Post'
 import useAuth from '../../hooks/useAuth'
-
+import { isEmpty } from '../../utils/Utils'
 const ThreadContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@ const ThreadContainer = styled.div`
   width: 100%;
   background-color: ${colors.secondary};
   border-radius: 10px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 `
 const Posts = styled.div`
   display: flex;
@@ -30,22 +30,13 @@ const Posts = styled.div`
 `
 
 const OldPostsContainer = () => {
-  const isEmpty = (value) => {
-    return (
-      value === undefined ||
-      value === null ||
-      (typeof value === 'object' && Object.keys(value).length === 0) ||
-      (typeof value === 'string' && value.trim().length === 0)
-    )
-  }
-
   const [loadPost, setLoadPost] = useState(true)
 
   const { auth } = useAuth()
 
-  const reduxPosts = useSelector((state) => state.posts)
+  const posts = useSelector((state) => state.posts)
   const dispatch = useDispatch()
-
+  //chargement des posts et des likes dans redux
   useEffect(() => {
     if (loadPost) {
       dispatch(GetPosts(auth.accessToken))
@@ -56,9 +47,10 @@ const OldPostsContainer = () => {
 
   return (
     <ThreadContainer>
-      {!isEmpty(reduxPosts[0]) ? (
+      {/* Si les posts sont chargé dans redux affichage de tous les post avec un map */}
+      {!isEmpty(posts[0]) ? (
         <Posts>
-          {reduxPosts.map((post, index) => (
+          {posts.map((post, index) => (
             <Post index={index} key={index} />
           ))}
         </Posts>

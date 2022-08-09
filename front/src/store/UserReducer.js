@@ -5,6 +5,7 @@ const initialState = []
 export const GET_USER_ACTION = 'GET_USER_ACTION'
 export const UNACTIVE_USER_ACTION = 'UNACTIVE_USER_ACTION'
 
+//obtention des informations de l'utilisateur
 export function GetUserInfos(accessToken) {
   return (dispatch) => {
     return axiosPrivate
@@ -21,10 +22,12 @@ export function GetUserInfos(accessToken) {
       .catch((err) => console.log(err))
   }
 }
+
+//suppression de l'utilisateur
 export function UnactiveUser(accessToken) {
   return (dispatch) => {
     return axiosPrivate
-      .put('/api/auth/unactiveAccount', {
+      .put('/api/auth/deleteAccount', {
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -35,7 +38,7 @@ export function UnactiveUser(accessToken) {
       .catch((err) => console.log(err))
   }
 }
-
+//reducer utilisateur
 export function UserReducer(state = initialState, action) {
   switch (action.type) {
     case GET_USER_ACTION:

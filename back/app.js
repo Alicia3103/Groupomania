@@ -1,3 +1,5 @@
+//appel des modules nécessaires
+
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
@@ -10,7 +12,8 @@ dotenv.config()
 //définition des routes
 const userRoutes = require('./routes/user')
 const postRoutes = require('./routes/post')
-
+const refreshCtrl = require('./controllers/refreshToken')
+// cross origine policies
 app.use(
 	helmet(
 		{ crossOriginResourcePolicy: { policy: 'cross-origin' } },
@@ -18,7 +21,7 @@ app.use(
 	)
 )
 
-//ne pas tout autoriser dans les cors, block avec le withcredential
+//ne pas tout autoriser dans les cors, block avec le withcredential, sécurisation pour le refrteshToken dans le httpOnly cookie
 
 app.use(
 	cors({
@@ -27,12 +30,14 @@ app.use(
 		optionsSuccessStatus: 200,
 	})
 )
+
+//utilisation du cookie parser pour lire le refreshToken du httpOnlyCookie et express
 app.use(cookieParser())
 
 app.use(express.json())
 
 app.use('/images', express.static(path.join(__dirname, 'images')))
-const refreshCtrl = require('./controllers/refreshToken')
+
 //utilisation des routes
 app.use('/api/post', postRoutes)
 app.use('/api/auth', userRoutes)

@@ -7,6 +7,7 @@ import colors from '../../utils/styles/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { GetUserPosts } from '../../store/PostsReducer'
 import { GetLikes } from '../../store/LikesReducer'
+import { isEmpty } from '../../utils/Utils'
 
 import Post from '../Post/Post'
 import useAuth from '../../hooks/useAuth'
@@ -37,15 +38,7 @@ const AllUserPostsContainer = () => {
   const userPosts = useSelector((state) => state.posts)
   const dispatch = useDispatch()
 
-  const isEmpty = (value) => {
-    return (
-      value === undefined ||
-      value === null ||
-      (typeof value === 'object' && Object.keys(value).length === 0) ||
-      (typeof value === 'string' && value.trim().length === 0)
-    )
-  }
-
+  //chargement des posts et des likes de l'utilisateur dans redux
   useEffect(() => {
     if (loadPost) {
       dispatch(GetUserPosts(auth.accessToken))
@@ -56,6 +49,7 @@ const AllUserPostsContainer = () => {
 
   return (
     <UserPostsContainers>
+      {/* Si les posts sont chargé dans redux affichage de tous les post avec un map */}
       {!isEmpty(userPosts[0]) ? (
         <Posts>
           {userPosts.map((post, index) => (

@@ -13,12 +13,11 @@ exports.signup = (req, res, next) => {
 	const nom = req.body.nom
 	const prenom = req.body.prenom
 
-	console.log('signup')
 	//hash et sallage du MDP grace a Bcrypt
 	bcrypt.genSalt(parseInt(process.env.SALT)).then((salt) => {
 		bcrypt
 			.hash(req.body.password, salt)
-
+			//stockage des informations utilisateur dont le MDP salté et crypté
 			.then((hash) => {
 				db.query(
 					'INSERT INTO user SET  Nom =?, Prenom =?, Email =?, Password= ?',
@@ -26,7 +25,6 @@ exports.signup = (req, res, next) => {
 					function (err, result) {
 						if (err) {
 							if (err.errno === 1062) {
-								
 								return res.status(409).json({ error: 'email déjà utilisé' })
 							}
 							return res
@@ -47,7 +45,8 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
 	const email = req.body.email
 	const password = req.body.password
-	console.log(req.body.email, req.body.password)
+
+	//récupération des données utilisateur et vérification de la correspondance du MDP
 	db.query(
 		'SELECT Id,Actif,IsAdmin,Password FROM user WHERE Email =?',
 		[email],
@@ -56,20 +55,20 @@ exports.login = (req, res, next) => {
 				return res.status(404).json({ error: 'Utilisateur non trouvé' })
 			}
 			const user = result[0]
-			if (user.Actif === 0) {
-				return res.status(401).json({ error: 'Compte désactivé' })
-			}
+
 			bcrypt
 				.compare(password, user.Password)
 				.then((valid) => {
 					if (!valid) {
 						return res.status(409).json({ message: 'Mot de passe incorrect !' })
 					}
+					//création d'un refreshToken pour le maintient de la connexion jusqu'à 24h
 					const refreshToken = jwt.sign(
 						{ userId: user.Id, isAdmin: user.IsAdmin },
 						process.env.REFRESH_SECRET_TOKEN,
 						{ expiresIn: '24h' }
 					)
+					//stockage du refreshToken dans la DB pour comparaison plus tard
 					db.query(
 						'UPDATE user SET RefreshToken=? WHERE Email=?',
 						[refreshToken, email],
@@ -78,6 +77,7 @@ exports.login = (req, res, next) => {
 								console.log(err)
 								return res.status(404).json({ error: 'Post non modifié' })
 							}
+							//stockage du refreshToken dans un cookie sécurisé pour reconnexion jusqu'à 24h
 							res.cookie('refreshToken', refreshToken, {
 								httpOnly: true,
 								samesite: 'None',
@@ -88,7 +88,7 @@ exports.login = (req, res, next) => {
 							return res.status(200).json({
 								userId: user.Id,
 								isAdmin: user.IsAdmin,
-								//encodage avec la fonction 'sign'
+								//encodage avec la fonction 'sign' du token de connexion
 								token: jwt.sign(
 									{ userId: user.Id, isAdmin: user.IsAdmin },
 									secretToken,
@@ -108,6 +108,7 @@ exports.logout = (req, res, next) => {
 	const cookies = req.cookies
 	if (!cookies?.refreshToken)
 		return res.status(204).json({ message: 'Pas de cookies' })
+	//clear du refreshToken dans la DB
 	db.query(
 		'UPDATE user SET RefreshToken=? WHERE RefreshToken=?',
 		[null, cookies.refreshToken],
@@ -115,7 +116,7 @@ exports.logout = (req, res, next) => {
 			if (err) {
 				return res.status(404).json({ error: 'Post non modifié' })
 			}
-
+			//nettoyage du cookie pour empecher la reconnexion depuis le terminal
 			res.clearCookie('refreshToken', {
 				httpOnly: true,
 				samesite: 'None',
@@ -125,7 +126,7 @@ exports.logout = (req, res, next) => {
 		}
 	)
 }
-
+//récupération des données utilistaeur
 exports.getUser = (req, res, next) => {
 	const userId = req.auth.userId
 	db.query(
@@ -134,34 +135,28 @@ exports.getUser = (req, res, next) => {
 		function (err, result) {
 			if (err) {
 				return res.status(404).json({ error: 'aucun utilisateur trouvé' })
-			} else if (result[0].Actif === 0) {
-				return res.status(403).json({ error: 'Compte désactivé' })
 			}
 			const user = {
 				Nom: result[0].Nom,
 				Prenom: result[0].Prenom,
 				Email: result[0].Email,
 			}
-			console.log(user)
+
 			return res.status(200).json({ user })
 		}
 	)
 }
 
-//désactive son propre compte
-exports.unactiveAccount = (req, res) => {
+//supprimer son propre compte
+exports.deleteAccount = (req, res) => {
 	const id = req.auth.userId
 
-	db.query(
-		'DELETE FROM user  WHERE Id =?',
-		[id],
-		function (err, result) {
-			if (err || result.affectedRows === 0) {
-				return res
-					.status(404)
-					.json({ error: 'Impossible de désactiver le compte' })
-			}
-			res.status(200).json({ message: 'Compte désactivé !' })
+	db.query('DELETE FROM user  WHERE Id =?', [id], function (err, result) {
+		if (err || result.affectedRows === 0) {
+			return res
+				.status(404)
+				.json({ error: 'Impossible de supprimer le compte' })
 		}
-	)
+		res.status(200).json({ message: 'Compte dsupprimé !' })
+	})
 }

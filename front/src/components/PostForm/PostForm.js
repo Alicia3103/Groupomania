@@ -17,24 +17,24 @@ const PostFormContent = styled.form`
   flex-direction: column;
   width: 80%;
   align-items: center;
-  border-radius:10px;
-  border:2px solid ${colors.darkerSecondary};
-  margin:10px;
-  padding:10px
+  border-radius: 10px;
+  border: 2px solid ${colors.darkerSecondary};
+  margin: 10px;
+  padding: 10px;
 `
 const PostFormImage = styled.img`
   align-self: center;
   max-width: 80%;
-  max-height:100px
+  max-height: 100px;
 `
-const TitleInput=styled.input`
-width:60%;
-margin:5px
+const TitleInput = styled.input`
+  width: 60%;
+  margin: 5px;
 `
-const ContentInput=styled.textarea`
-width:80%;
-height:50%;
-margin:5px
+const ContentInput = styled.textarea`
+  width: 80%;
+  height: 50%;
+  margin: 5px;
 `
 
 const SendButton = styled.button`
@@ -65,7 +65,6 @@ margin:2px
 
 `
 
-
 function PostForm() {
   const { auth } = useAuth()
   const fileInputRef = useRef()
@@ -78,6 +77,8 @@ function PostForm() {
 
   const post = { title, content }
   const postData = new FormData()
+
+  //affichage du preview de l'image
   useEffect(() => {
     if (selectedFile) {
       const reader = new FileReader()
@@ -90,8 +91,10 @@ function PostForm() {
     }
   }, [selectedFile])
 
+  //envoi du formulaire de creation de post
   const handleSubmit = async (e) => {
     e.preventDefault()
+
     postData.set('post', JSON.stringify(post))
 
     postData.append('image', selectedFile)
@@ -101,7 +104,7 @@ function PostForm() {
       setTitle('')
       setContent('')
       setSelectedFile()
-
+      //récupération des posts dans le redux
       dispatch(GetPosts(auth.accessToken))
     } catch (err) {
       console.log(err)
@@ -109,78 +112,76 @@ function PostForm() {
   }
 
   return (
-   
-      <PostFormContent onSubmit={handleSubmit}>
-        <label htmlFor="title">Titre</label>
-        <TitleInput
-          type="text"
-          id="title"
-          value={title}
-          required
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <label htmlFor="content">Contenu</label>
-        <ContentInput
-          id="content"
-          value={content}
-          required
-          onChange={(e) => setContent(e.target.value)}
-        />
-        {preview ? (
-          <div>
-            <PostFormImage
-              alt={'preview'}
-              style={{ height: 100 }}
-              src={preview}
-              onClick={(e) => {
-                e.preventDefault()
-                fileInputRef.current.click()
-              }}
-            />
-            <Button
-              onClick={() => {
-                setSelectedFile()
-                setPreview('')
-              }}
-            >
-              <FontAwesomeIcon icon={faXmark} />
-            </Button>
-          </div>
-        ) : (
-          <Button
+    <PostFormContent onSubmit={handleSubmit}>
+      <label htmlFor="title">Titre</label>
+      <TitleInput
+        type="text"
+        id="title"
+        value={title}
+        required
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <label htmlFor="content">Contenu</label>
+      <ContentInput
+        id="content"
+        value={content}
+        required
+        onChange={(e) => setContent(e.target.value)}
+      />
+      {preview ? (
+        <div>
+          <PostFormImage
+            alt={'preview'}
+            style={{ height: 100 }}
+            src={preview}
             onClick={(e) => {
               e.preventDefault()
               fileInputRef.current.click()
             }}
+          />
+          <Button
+            onClick={() => {
+              setSelectedFile()
+              setPreview('')
+            }}
           >
-            <FontAwesomeIcon icon={faImage} />
+            <FontAwesomeIcon icon={faXmark} />
           </Button>
-        )}
-        <input
-          type="file"
-          accept=".jpg, .jpeg, .png"
-          onChange={(e) => setSelectedFile(e.target.files[0])}
-          ref={fileInputRef}
-          style={{ display: 'none' }}
-        />
-
-        <input
-          className="send"
-          type="submit"
-          value="Envoyer"
-          ref={submitInputRef}
-          style={{ display: 'none' }}
-        />
-        <SendButton
+        </div>
+      ) : (
+        <Button
           onClick={(e) => {
             e.preventDefault()
-            submitInputRef.current.click()
+            fileInputRef.current.click()
           }}
         >
-          <FontAwesomeIcon icon={faPaperPlane} />
-        </SendButton>
-      </PostFormContent>
-    
+          <FontAwesomeIcon icon={faImage} />
+        </Button>
+      )}
+      <input
+        type="file"
+        accept=".jpg, .jpeg, .png"
+        onChange={(e) => setSelectedFile(e.target.files[0])}
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+      />
+
+      <input
+        className="send"
+        type="submit"
+        value="Envoyer"
+        ref={submitInputRef}
+        style={{ display: 'none' }}
+      />
+      <SendButton
+        onClick={(e) => {
+          e.preventDefault()
+          submitInputRef.current.click()
+        }}
+      >
+        <FontAwesomeIcon icon={faPaperPlane} />
+      </SendButton>
+    </PostFormContent>
   )
 }
 

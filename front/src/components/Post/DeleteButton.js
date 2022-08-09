@@ -8,7 +8,7 @@ import { DeletePost } from '../../store/PostsReducer'
 import useAuth from '../../hooks/useAuth'
 import styled from 'styled-components'
 
-const DeleteButtonContainer=styled.button`
+const DeleteButtonContainer = styled.button`
 color:${colors.secondary};
 margin-left:8px
 box-shadow: 0px 10px 14px -7px #276873;
@@ -25,6 +25,8 @@ function DeleteButton({ index }) {
   const dispatch = useDispatch()
   const posts = useSelector((state) => state.posts)
   const postId = posts[index].Id
+
+  //appel de la fonction delete du post reducer
   const handleDelete = () => {
     dispatch(DeletePost(postId, auth.accessToken))
   }

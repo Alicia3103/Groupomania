@@ -4,15 +4,15 @@ import Header from '../components/Header/Header'
 import UserInfo from '../components/UserInfo/UserInfo'
 import UserPosts from '../components/UserPosts/UserPosts'
 import styled from 'styled-components'
-import backgroundImage from './groupomaniafond.jpg'
+import backgroundImage from '../../src/images/groupomaniafond.jpg'
 
 const UserPage = styled.div`
-display: flex;
-flex-direction: column;
-background: url(${backgroundImage})no-repeat center center fixed;
-background-size: cover;
-min-height: 100vh;
-overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: url(${backgroundImage}) no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  overflow: hidden;
 `
 const UserPageContainer = styled.section`
   display: flex;

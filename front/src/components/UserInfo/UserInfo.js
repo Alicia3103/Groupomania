@@ -49,18 +49,19 @@ const UserInfo = () => {
   const { auth } = useAuth()
 
   const navigate = useNavigate()
+
+  //récuperation des infos dans redux
   const infoUser = useSelector((state) => state.user)
   const dispatch = useDispatch()
-
   useEffect(() => {
     dispatch(GetUserInfos(auth.accessToken))
-    // eslint-disable-next-line
   }, [])
+
   const { setAuth } = useAuth()
 
   const handleClick = (e) => {
     e.preventDefault()
-
+    //suppression de l'utilisateur suppression des informations du context asuth et redirection vers la connexion
     dispatch(UnactiveUser(auth.accessToken))
     setAuth({ userId: '', accessToken: '' })
 

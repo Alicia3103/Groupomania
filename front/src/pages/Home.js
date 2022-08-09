@@ -4,7 +4,7 @@ import Header from '../components/Header/Header'
 import Navigation from '../components/Navigation/Navigation'
 
 import styled from 'styled-components'
-import backgroundImage from './groupomaniafond.jpg'
+import backgroundImage from '../../src/images/groupomaniafond.jpg'
 import PostForm from '../components/PostForm/PostForm'
 import colors from '../utils/styles/colors'
 
@@ -13,7 +13,7 @@ import OldPostsContainer from '../components/OldPostContainer/OldPostsContainer'
 const HomePage = styled.div`
   display: flex;
   flex-direction: column;
-  background: url(${backgroundImage})no-repeat center center fixed;
+  background: url(${backgroundImage}) no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   overflow: hidden;
@@ -24,7 +24,6 @@ const HomePageContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100vw;
- 
 `
 const PostsContainer = styled.div`
   display: flex;
@@ -35,13 +34,13 @@ const PostsContainer = styled.div`
 `
 
 const NewPostContainer = styled.div`
-min-height: 150px;
-width: 100%;
-background-color: ${colors.secondary};
-border-radius: 10px;
-display:flex;
-justify-content: center;
-margin:10px
+  min-height: 150px;
+  width: 100%;
+  background-color: ${colors.secondary};
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
 `
 
 const Home = () => {

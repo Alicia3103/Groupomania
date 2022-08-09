@@ -13,18 +13,17 @@ import LogOut from './pages/LogOut'
 import './utils/styles/normalize.css'
 import './utils/styles/index.css'
 
-
-
 const App = () => {
+  //appel des interceptors
   const interceptorsAxiosPrivate = useInterceptorsAxiosPrivate()
   return (
     <BrowserRouter>
-    
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/connexion" element={<Connexion />} />
-
+          {/* application du persistLogin afin de permettre aux utilisateur de rester connecter meme en cas de rechargement de ces pages */}
           <Route path="/" element={<PersistLogin />}>
+            {/* Protection des routes avec le RequireAuth afin de garantire l'acces aux pages sécurisées que par les utilisateurs connectés */}
             <Route element={<RequireAuth />}>
               <Route path="/" element={<Home />} />
               <Route path="/user" element={<User />} />
