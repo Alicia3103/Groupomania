@@ -1,0 +1,29 @@
+html {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+p {
+  font-size: 14px;
+}
+
+a {
+  color: inherit;
+  text-decoration: unset;
+}
+button,
+input,
+textarea {
+  font-size: 14px;
+  border: unset;
+  border-radius: 5px;
+}

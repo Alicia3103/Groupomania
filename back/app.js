@@ -1,28 +1,41 @@
-const express = require("express");
+const express = require('express')
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
+const helmet = require('helmet')
+const path = require('path')
+const app = express()
+const dotenv = require('dotenv')
+dotenv.config()
 
-const helmet = require("helmet");
-const path = require('path');
-const app = express();
-
-app.use((req, res, next) => {
-    //acceder a l'api
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    // headers possible
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization')
-    //methode
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTION')
-    next()
-});
 //définition des routes
-const userRoutes = require('./routes/user');
-const postRoutes = require('./routes/post');
+const userRoutes = require('./routes/user')
+const postRoutes = require('./routes/post')
 
+app.use(
+	helmet(
+		{ crossOriginResourcePolicy: { policy: 'cross-origin' } },
+		{ crossOriginOpenerPolicy: { policy: 'cross-origin' } }
+	)
+)
 
-app.use(express.json());
+//ne pas tout autoriser dans les cors, block avec le withcredential
+
+app.use(
+	cors({
+		credentials: true,
+		origin: process.env.FRONT_PORT,
+		optionsSuccessStatus: 200,
+	})
+)
+app.use(cookieParser())
+
+app.use(express.json())
+
 app.use('/images', express.static(path.join(__dirname, 'images')))
-
+const refreshCtrl = require('./controllers/refreshToken')
 //utilisation des routes
-app.use('/api/post', postRoutes);
-app.use('/api/auth', userRoutes);
+app.use('/api/post', postRoutes)
+app.use('/api/auth', userRoutes)
+app.get('/api/refreshToken', refreshCtrl.refreshedToken)
 
-module.exports = app;
+module.exports = app
