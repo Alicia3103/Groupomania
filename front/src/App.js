@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Connexion from './pages/Connexion'
 
-import { createGlobalStyle } from 'styled-components'
+
 import Home from './pages/Home'
 import useInterceptorsAxiosPrivate from './hooks/useInterceptorsAxiosPrivate'
 import User from './pages/User'
